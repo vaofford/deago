@@ -1,0 +1,27 @@
+Package: deago
+Version: 0.0.0.9000
+Title: DEAGO: RNASeq differential expression analysis and GO term enrichment 
+    reporter
+Description:  Generation of user-friendly HTML reports from differential 
+    expression analyis (DESeq2) and GO term enrichment (topGO) of count 
+    data using knitr. User provides count data and 'deago' will run the 
+    analysis and generate a HTML summary report containing QC plots, DE 
+    genes and top 30 GO terms.
+Authors@R: c(
+    person("Victoria", "Offord", email="vo1@sanger.ac.uk", role=c("aut", "cre")),
+    person("Sanger Pathogens", email="path-help@sanger.ac.uk", role="ctb"),
+    person("Wellcome Trust Sanger Institute", role="cph")
+    )
+Maintainer: Victoria Offord <vo1@sanger.ac.uk>
+Imports: DESeq2, DT, RColorBrewer, GenomicRanges, ggplot2, ggrepel, gplots, limma, methods, 
+    SummarizedExperiment, S4Vectors, reshape, scales, topGO
+Suggests: grDevices, stats, utils, testthat, knitr, proto
+Depends: R (>= 3.3)
+License: GPL-3 | file LICENSE
+BugReports: https://gitlab.internal.sanger.ac.uk/sanger-pathogens/deago/issues
+RoxygenNote: 6.0.1
+Type: Package
+NeedsCompilation: no
+VignetteBuilder: knitr
+Repository: CRAN
+LazyLoad: true

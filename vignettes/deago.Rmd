@@ -1,0 +1,61 @@
+---
+title: "RNASeq analysis reporting with deago"
+author: "Victoria Offord"
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('deago')`"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    fig_width: 5
+    highlight: tango
+    theme: paper
+bibliography: references.bibtex
+---
+
+```{r setup, echo=FALSE, results="hide"}
+knitr::opts_chunk$set(tidy=FALSE, cache=FALSE, dev="png", message=FALSE, error=FALSE, warning=TRUE)
+```	
+
+# Introduction
+
+
+
+# Preparing input data
+
+For a comprehensive explanation
+
+
+# Mapping
+
+
+@Love2014
+@Alexa2016
+
+*Please make sure to cite the packages which are used for analysis by deago:*
+
+**DESeq2**
+
+> Love, M.I., Huber, W., Anders, S.,
+> Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2, 
+> *Genome Biology* 2014, **15**:550.
+> [10.1186/s13059-014-0550-8](http://dx.doi.org/10.1186/s13059-014-0550-8)
+
+**topGO**
+
+> Alexa, A. and Rahnenfuhrer, J., 
+> topGO: Enrichment Analysis for Gene Ontology, 2016,
+> [`r BiocStyle::pkg_ver('topGO')`](https://bioconductor.org/packages/release/bioc/html/topGO.html)
+
+# Acknowledgments
+
+A special thanks must go to the authors of DESeq2, whose documentation and development style has been an invaluable inspiration. 
+
+# Session information
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+
+# References
