@@ -25,7 +25,12 @@ getContrasts <- function(dds, parameters)
 
   # Generate contrasts
   contrast_matrix <- combn(levels(dds$condition), 2)
-  contrasts <- apply(contrast_matrix[c(2, 1), ] , 2 , paste , collapse = "_vs_")
+  if(ncol(contrast_matrix) > 1)
+  {
+      contrasts <- apply(contrast_matrix[c(2, 1), ] , 2 , paste , collapse = "_vs_")
+  } else {
+      contrasts <- paste(contrast_matrix[2,], contrast_matrix[1,], sep='_vs_')
+  }
 
   results <- list()
   for (i in 1:ncol(contrast_matrix))
