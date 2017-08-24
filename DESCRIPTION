@@ -13,7 +13,7 @@ Authors@R: c(
     person("Wellcome Trust Sanger Institute", role="cph")
     )
 Maintainer: Victoria Offord <vo1@sanger.ac.uk>
-Imports: DESeq2, DT, GenomicRanges, ggplot2, ggrepel, limma, methods, 
+Imports: DESeq2, DT, GenomicRanges, ggplot2, ggrepel, graph, limma, methods, 
     SummarizedExperiment, S4Vectors, reshape, scales, topGO
 Suggests: grDevices, stats, utils, testthat, knitr, proto
 Depends: R (>= 3.3)
