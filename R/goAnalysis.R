@@ -80,6 +80,7 @@ prepareGoData <- function(dds, contrast, go_level)
 #'
 #' @import DESeq2
 #' @import topGO
+#' @importFrom graph numNodes
 #' @export
 
 runGoAnalysis <- function(go_data)
@@ -88,6 +89,13 @@ runGoAnalysis <- function(go_data)
   weight01 <- runTest(go_data, algorithm = "weight01", statistic = "fisher")
   elim <- runTest(go_data, algorithm = "elim", statistic = "fisher")
 
+  minNodes <- numNodes(graph(go_data))
+  numTableNodes <- 30
+
+  if (minNodes < numTableNodes) {
+    numTableNodes <- minNodes
+  }
+
   go_table <- GenTable(go_data,
                        classicFisher = fisher,
                        elimFisher = elim,
@@ -95,7 +103,7 @@ runGoAnalysis <- function(go_data)
                        orderBy = "weight01Fisher",
                        ranksOf = "classicFisher",
                        numChar = 100,
-                       topNodes = 30
+                       topNodes = numTableNodes
   )
 
   go_table <- go_table[, c('GO.ID','Term','Significant','Expected','weight01Fisher')]

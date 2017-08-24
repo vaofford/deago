@@ -324,6 +324,7 @@ getGeneSymbols <- function(dds, ann, col)
   if (sum(!is.na(symbols)) < 1) stop("Could not import annotation: no dataset identifiers found.")
 
   symbols[is.na(symbols) ] <- "unknown"
+  symbols[which(symbols == "") ] <- "unknown"
 
   if (length(symbols) != length(rownames(dds))) stop("Could not import annotation: gene symbol list length different from feature list.")
 
