@@ -1,7 +1,7 @@
 context("results directory")
 
 test_that("making results and image directories works", {
-  results_dir <- makeResultDir(path=expected_parameters$result_dir, keep_images = 1)
+  results_dir <- makeResultDir(path=expected_parameters$results_directory, keep_images = 1)
   expect_true(dir.exists(results_dir))
 
   image_dir <- file.path(results_dir,"images")

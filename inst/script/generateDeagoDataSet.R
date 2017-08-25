@@ -1,17 +1,17 @@
 library(deago)
 library(DESeq2)
 
-expected_parameters_list <- list (  'counts' = "test_counts",
-                                    'target' = "test_targets.txt",
-                                    'result_dir' = "/path/place/holder",
-                                    'gene_ids' = "Geneid",
-                                    'alpha' = 0.05,
-                                    'control' = NULL,
-                                    'columns' = 'condition',
-                                    'annotation' = 'tests/testthat/deago-test-annotation.tsv',
-                                    'keep_images' = 1,
-                                    'qc_only' = 0,
-                                    'go_analysis' = 1)
+expected_parameters_list <- list (  'counts_directory'  = "test_counts",
+                                    'targets_file'      = "test_targets.txt",
+                                    'results_directory' = "/path/place/holder",
+                                    'gene_ids'          = "Geneid",
+                                    'alpha'             = 0.05,
+                                    'control'           = NULL,
+                                    'columns'           = 'condition',
+                                    'annotation_file'   = 'tests/testthat/deago-test-annotation.tsv',
+                                    'keep_images'       = 1,
+                                    'qc_only'           = 0,
+                                    'go_analysis'       = 1)
 
 parameters_file <- file.path(tempdir(), 'config')
 buildConfig(parameters_file, parameters=expected_parameters_list)
@@ -33,7 +33,7 @@ unlink(targets_file)
 expected_dds_de <- suppressMessages(DESeq(expected_dds))
 colData(expected_dds)$condition <- factor(tolower(colData(expected_dds)$condition))
 
-expected_annotation <- importAnnotation(expected_parameters$annotation)
+expected_annotation <- importAnnotation(expected_parameters$annotation_file)
 expected_dds_de_ann <- annotateDataset(expected_dds_de, expected_parameters)
 expected_gene_list <- getGeneSymbols(expected_dds_de, expected_annotation, 2)
 expected_go_list <- getGOlist(expected_annotation, 3)

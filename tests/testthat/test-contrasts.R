@@ -16,10 +16,10 @@ test_that("preparing contrast works", {
 })
 
 test_that("writing contrast works", {
-  expect_silent(writeContrasts(expected_dds_de, expected_contrasts, expected_parameters$result_dir))
+  expect_silent(writeContrasts(expected_dds_de, expected_contrasts, expected_parameters$results_directory))
   for (i in names(expected_contrasts))
   {
-    expect_true(file.exists(file.path(expected_parameters$result_dir, paste0(i,"_q0.05.txt"))))
+    expect_true(file.exists(file.path(expected_parameters$results_directory, paste0(i,"_q0.05.txt"))))
   }
 })
 

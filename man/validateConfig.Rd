@@ -23,10 +23,10 @@ A \link{list} containing the validated parameters.
 represent the parameters for the analysis, validates them and then returns
 the validated parameter key/value list.
 
-Required key/value pairs are: \describe{ \item{\strong{counts}}{Directory
-where count data files are located.} \item{\strong{target}}{Location of
+Required key/value pairs are: \describe{ \item{\strong{counts_directory}}{Directory
+where count data files are located.} \item{\strong{targets_file}}{Location of
 targets file which contains the mapping files and experimental conditions.}
-\item{\strong{results_dir}}{Directory where results directory will be
+\item{\strong{results_directory}}{Directory where results directory will be
 created.} }
 
 Other accepted key/value pairs and their defaults are: \describe{
@@ -34,7 +34,7 @@ Other accepted key/value pairs and their defaults are: \describe{
 gene identifiers [Default: Geneid]} \item{\strong{alpha}}{[Significance
 cut-off, see \link[DESeq2]{results} for more information Default: 0.05]}
 \item{\strong{control}}{Name of condition in the targets file which was the
-control [Default: control]} \item{\strong{annotation}}{Location of annotation
+control [Default: control]} \item{\strong{annotation_file}}{Location of annotation
 file, see \link[deago]{annotateDataset} [Default: NULL]}
 \item{\strong{keep_images}}{Give a value of 1 to keep images which are used
 in the HTML report, see \link[deago]{plotToFile} for more information
@@ -42,7 +42,7 @@ in the HTML report, see \link[deago]{plotToFile} for more information
 analysis functions or a value of 1 to report only the QC plots [Default: 1]}
 \item{\strong{go_analysis}}{Give a value of 1 to run GO term enrichment
 analysis using \link{topGO}. If value of 1 given for go_analysis, an
-annotation file must be provided as a value for the annotation key [Default:
+annotation file must be provided as a value for the annotation_file key [Default:
 0]} }
 
 \code{validateConfig} returns a list containing the validated parameter
@@ -50,9 +50,9 @@ values with the names corresponding to their keys.
 }
 \examples{
  # Basic parameter list
- params <- list ( 'counts' = "/path/to/counts.txt",
-                  'target' = "/path/to/targets.txt",
-                  'result_dir' = "/path/to/result_dir")
+ params <- list ( 'counts_directory' = "/path/to/counts.txt",
+                  'targets_file'     = "/path/to/targets.txt",
+                  'results_directory' = "/path/to/result_dir")
 
  # Validate parameters
  validateConfig(params)

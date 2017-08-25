@@ -7,10 +7,10 @@
 #'   into a list.  The configuration file should contain two columns, the first
 #'   containing the keys outlined below and the second, their values.
 #'
-#'   Required key/value pairs are: \describe{ \item{\strong{counts}}{Directory
-#'   where count data files are located.} \item{\strong{target}}{Location of
+#'   Required key/value pairs are: \describe{ \item{\strong{counts_directory}}{Directory
+#'   where count data files are located.} \item{\strong{targets_file}}{Location of
 #'   targets file containing the mappings between file names and experimental
-#'   conditions.} \item{\strong{results_dir}}{Location where results directory
+#'   conditions.} \item{\strong{results_directory}}{Location where results directory
 #'   is to be created.} }
 #'
 #'   Other accepted key/value pairs and their defaults are: \describe{
@@ -18,7 +18,7 @@
 #'   gene identifiers [Default: Geneid]} \item{\strong{alpha}}{Significance
 #'   cut-off, see \link[DESeq2]{results} for more information [Default: 0.05]}
 #'   \item{\strong{control}}{Name of condition in the targets file which was the
-#'   control [Default: control]} \item{\strong{annotation}}{Location of
+#'   control [Default: control]} \item{\strong{annotation_file}}{Location of
 #'   annotation file, see \link[deago]{annotateDataset} [Default: NULL]}
 #'   \item{\strong{keep_images}}{Give a value of 1 to keep images which are used
 #'   in the HTML report, see \link[deago]{plotToFile} for more information
@@ -113,9 +113,9 @@ importConfig <- function(file, path=NULL, sep="\t")
 #' @examples
 #' \dontrun{
 #'  # Basic parameter list
-#'  params <- list ( 'counts' = "/path/to/counts.txt",
-#'                   'target' = "/path/to/targets.txt",
-#'                   'result_dir' = "/path/to/result_dir")
+#'  params <- list ( 'counts_directory' = "/path/to/counts.txt",
+#'                   'targets_file'     = "/path/to/targets.txt",
+#'                   'results_directory' = "/path/to/result_dir")
 #'
 #'  # Write tab-delimited config file to working directory
 #'  buildConfig("config.txt", parameters=params)
@@ -164,14 +164,14 @@ buildConfig <- function(file, path=NULL, parameters)
 #' @return A \link{character} string containing the name of the output file.
 #'
 #' @importFrom utils write.table
-#' @export 
+#' @export
 #'
 #' @examples
 #' \dontrun{
 #'  # Basic parameter list
-#'  params <- list ( 'counts' = "/path/to/counts.txt",
-#'                   'target' = "/path/to/targets.txt",
-#'                   'result_dir' = "/path/to/result_dir")
+#'  params <- list ( 'counts_directory' = "/path/to/counts.txt",
+#'                   'targets_file'     = "/path/to/targets.txt",
+#'                   'results_directory' = "/path/to/result_dir")
 #'
 #'  # Write tab-delimited config file to working directory
 #'  writeConfig("config.txt", parameters=params)
@@ -206,10 +206,10 @@ writeConfig <- function(file, path=NULL, parameters)
 #' represent the parameters for the analysis, validates them and then returns
 #' the validated parameter key/value list.
 #'
-#' Required key/value pairs are: \describe{ \item{\strong{counts}}{Directory
-#' where count data files are located.} \item{\strong{target}}{Location of
+#' Required key/value pairs are: \describe{ \item{\strong{counts_directory}}{Directory
+#' where count data files are located.} \item{\strong{targets_file}}{Location of
 #' targets file which contains the mapping files and experimental conditions.}
-#' \item{\strong{results_dir}}{Directory where results directory will be
+#' \item{\strong{results_directory}}{Directory where results directory will be
 #' created.} }
 #'
 #' Other accepted key/value pairs and their defaults are: \describe{
@@ -217,7 +217,7 @@ writeConfig <- function(file, path=NULL, parameters)
 #' gene identifiers [Default: Geneid]} \item{\strong{alpha}}{[Significance
 #' cut-off, see \link[DESeq2]{results} for more information Default: 0.05]}
 #' \item{\strong{control}}{Name of condition in the targets file which was the
-#' control [Default: control]} \item{\strong{annotation}}{Location of annotation
+#' control [Default: control]} \item{\strong{annotation_file}}{Location of annotation
 #' file, see \link[deago]{annotateDataset} [Default: NULL]}
 #' \item{\strong{keep_images}}{Give a value of 1 to keep images which are used
 #' in the HTML report, see \link[deago]{plotToFile} for more information
@@ -225,7 +225,7 @@ writeConfig <- function(file, path=NULL, parameters)
 #' analysis functions or a value of 1 to report only the QC plots [Default: 1]}
 #' \item{\strong{go_analysis}}{Give a value of 1 to run GO term enrichment
 #' analysis using \link{topGO}. If value of 1 given for go_analysis, an
-#' annotation file must be provided as a value for the annotation key [Default:
+#' annotation file must be provided as a value for the annotation_file key [Default:
 #' 0]} }
 #'
 #' \code{validateConfig} returns a list containing the validated parameter
@@ -241,13 +241,13 @@ writeConfig <- function(file, path=NULL, parameters)
 #' @return A \link{list} containing the validated parameters.
 #'
 #' @importFrom utils write.table
-#' @export 
+#' @export
 #'
 #' @examples
 #'  # Basic parameter list
-#'  params <- list ( 'counts' = "/path/to/counts.txt",
-#'                   'target' = "/path/to/targets.txt",
-#'                   'result_dir' = "/path/to/result_dir")
+#'  params <- list ( 'counts_directory' = "/path/to/counts.txt",
+#'                   'targets_file'     = "/path/to/targets.txt",
+#'                   'results_directory' = "/path/to/result_dir")
 #'
 #'  # Validate parameters
 #'  validateConfig(params)
@@ -258,21 +258,21 @@ validateConfig <- function(parameters)
   if (missing(parameters)) stop("Could not validate config: need to specify list of parameters.")
   if (!is.list(parameters)) stop("Could not validate config: parameters are not a list.")
 
-  essential_parameters = c('counts','target','result_dir')
+  essential_parameters = c('counts_directory','targets_file','results_directory')
 
   for (i in essential_parameters)
   {
     if(!exists(i, where=parameters)) stop(paste0("Could not validate config: need to specify value for ", i))
   }
 
-  default_parameters <- list ( 'gene_ids' = "Geneid",
-                               'alpha' = 0.05,
-                               'control' = NULL,
-                               'columns' = 'condition',
-                               'annotation' = NULL,
-                               'keep_images' = 0,
-                               'qc_only' = 1,
-                               'go_analysis' = 0)
+  default_parameters <- list ( 'gene_ids'        = "Geneid",
+                               'alpha'           = 0.05,
+                               'control'         = NULL,
+                               'columns'         = 'condition',
+                               'annotation_file' = NULL,
+                               'keep_images'     = 0,
+                               'qc_only'         = 1,
+                               'go_analysis'     = 0)
 
   for (i in names(default_parameters))
   {
@@ -282,7 +282,7 @@ validateConfig <- function(parameters)
     }
   }
 
-  if (parameters$go_analysis == 1 && is.null(parameters$annotation)) stop("Could not validate config: annotation not provided for go analysis")
+  if (parameters$go_analysis == 1 && is.null(parameters$annotation_file)) stop("Could not validate config: annotation not provided for go analysis")
   if (parameters$qc_only == 1) parameters$go_analysis <- 0
 
   return(parameters)

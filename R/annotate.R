@@ -50,9 +50,9 @@ annotateDataset <- function(dds, parameters)
 {
   stopifnot(is(dds, 'DESeqDataSet'))
   stopifnot(is.list(parameters))
-  if(!exists('annotation', where=parameters)) stop ("Could not import annotation: no annotation file provided.")
+  if(!exists('annotation_file', where=parameters)) stop ("Could not import annotation: no annotation file provided.")
 
-  ann <- importAnnotation(parameters$annotation)
+  ann <- importAnnotation(parameters$annotation_file)
 
   if (length(intersect(rownames(dds), ann[,1])) == 0) stop("Could not import annotation: no dataset identifiers found.")
   dds <- addAnnotationsToDataSet(dds, ann)

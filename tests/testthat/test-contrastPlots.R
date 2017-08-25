@@ -1,43 +1,43 @@
 context("contrast plots")
 
 test_that("plotting MA works", {
-  expect_silent(observed_ma_plot <- plotContrastMA(expected_contrasts$BI_vs_AI, expected_parameters$result_dir, geneLabels=TRUE))
+  expect_silent(observed_ma_plot <- plotContrastMA(expected_contrasts$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
   expect_is(observed_ma_plot, 'ggplot')
 
-  observed_ma_file <- file.path(expected_parameters$result_dir, 'images', 'BI_vs_AI_MA.png')
+  observed_ma_file <- file.path(expected_parameters$results_directory, 'images', 'BI_vs_AI_MA.png')
   expect_true(file.exists(observed_ma_file))
 
   expect_identical(layer_data(observed_ma_plot), layer_data(expected_ma_plot))
   expect_equal(layer_scales(observed_ma_plot), layer_scales(expected_ma_plot))
   expect_identical(observed_ma_plot$theme, expected_ma_plot$theme)
 
-  expect_silent(observed_ma_plot <- plotContrastMA(expected_contrasts_ann$BI_vs_AI, expected_parameters$result_dir, geneLabels=TRUE))
+  expect_silent(observed_ma_plot <- plotContrastMA(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
 })
 
 test_that("plotting volcano works", {
-  expect_silent(observed_volcano_plot <- plotVolcano(expected_contrasts$BI_vs_AI, expected_parameters$result_dir, geneLabels=TRUE))
+  expect_silent(observed_volcano_plot <- plotVolcano(expected_contrasts$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
   expect_is(observed_volcano_plot, 'ggplot')
 
-  observed_volcano_file <- file.path(expected_parameters$result_dir, 'images', 'BI_vs_AI_volcano.png')
+  observed_volcano_file <- file.path(expected_parameters$results_directory, 'images', 'BI_vs_AI_volcano.png')
   expect_true(file.exists(observed_volcano_file))
 
   expect_equal(layer_data(observed_volcano_plot), layer_data(expected_volcano_plot))
   expect_equal(layer_scales(observed_volcano_plot), layer_scales(expected_volcano_plot))
   expect_identical(observed_volcano_plot$theme, expected_volcano_plot$theme)
 
-  expect_silent(observed_volcano_plot <- plotVolcano(expected_contrasts_ann$BI_vs_AI, expected_parameters$result_dir, geneLabels=TRUE))
+  expect_silent(observed_volcano_plot <- plotVolcano(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
 })
 
 test_that("getting venn counts and plotting venn works", {
   expect_silent(observed_venn_counts <- getVennCounts(expected_contrasts[c(3,12)]))
   expect_identical(observed_venn_counts, expected_venn_counts)
 
-  expect_silent(plotVenn(observed_venn_counts, expected_parameters$result_dir))
-  venn_file <- file.path(expected_parameters$result_dir, 'images', 'DE_venn.png')
+  expect_silent(plotVenn(observed_venn_counts, expected_parameters$results_directory))
+  venn_file <- file.path(expected_parameters$results_directory, 'images', 'DE_venn.png')
   expect_true(file.exists(venn_file))
 
   expect_silent(observed_venn_counts_ann <- getVennCounts(expected_contrasts_ann[c(3,12)]))
-  expect_silent(plotVenn(observed_venn_counts_ann, expected_parameters$result_dir))
+  expect_silent(plotVenn(observed_venn_counts_ann, expected_parameters$results_directory))
 })
 
 test_that("getting and labelling top genes works", {

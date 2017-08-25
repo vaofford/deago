@@ -3,11 +3,11 @@ context("targets")
 test_that("importing targets file works", {
   expect_error(importTargets(), "Could not import targets: need to specify targets file.")
 
-  targets_file <- file.path(expected_parameters$result_dir, "test_targets.txt")
+  targets_file <- file.path(expected_parameters$results_directory, "test_targets.txt")
   write.table(target_df, file=targets_file, quote=FALSE, row.names=FALSE, sep="\t")
   expect_true(file.exists(targets_file))
 
-  expect_silent(observed_targets <- importTargets(expected_parameters$target, path=expected_parameters$result_dir))
+  expect_silent(observed_targets <- importTargets(expected_parameters$target, path=expected_parameters$results_directory))
   expect_is(observed_targets, 'data.frame')
   expect_identical(observed_targets, expected_targets)
 })

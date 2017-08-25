@@ -26,10 +26,10 @@ A key/value \link{list} containing the parameters from the configuration file.
   into a list.  The configuration file should contain two columns, the first
   containing the keys outlined below and the second, their values.
 
-  Required key/value pairs are: \describe{ \item{\strong{counts}}{Directory
-  where count data files are located.} \item{\strong{target}}{Location of
+  Required key/value pairs are: \describe{ \item{\strong{counts_directory}}{Directory
+  where count data files are located.} \item{\strong{targets_file}}{Location of
   targets file containing the mappings between file names and experimental
-  conditions.} \item{\strong{results_dir}}{Location where results directory
+  conditions.} \item{\strong{results_directory}}{Location where results directory
   is to be created.} }
 
   Other accepted key/value pairs and their defaults are: \describe{
@@ -37,7 +37,7 @@ A key/value \link{list} containing the parameters from the configuration file.
   gene identifiers [Default: Geneid]} \item{\strong{alpha}}{Significance
   cut-off, see \link[DESeq2]{results} for more information [Default: 0.05]}
   \item{\strong{control}}{Name of condition in the targets file which was the
-  control [Default: control]} \item{\strong{annotation}}{Location of
+  control [Default: control]} \item{\strong{annotation_file}}{Location of
   annotation file, see \link[deago]{annotateDataset} [Default: NULL]}
   \item{\strong{keep_images}}{Give a value of 1 to keep images which are used
   in the HTML report, see \link[deago]{plotToFile} for more information

@@ -8,19 +8,19 @@ test_that("importing annotation and annotating DESeqDataSet works", {
 
 test_that("importing annotation works", {
   expect_error(importAnnotation())
-  expect_silent(observed_annotation <- importAnnotation(expected_parameters$annotation))
+  expect_silent(observed_annotation <- importAnnotation(expected_parameters$annotation_file))
   expect_identical(observed_annotation, expected_annotation)
 })
 
 test_that("importing annotation with too few columns fails", {
-  bad_ann_file <- file.path(expected_parameters$result_dir, "too_few.txt")
+  bad_ann_file <- file.path(expected_parameters$results_directory, "too_few.txt")
   write.table(as.data.frame(matrix(0, ncol = 1, nrow = 5)), bad_ann_file, sep="\t", row.names = FALSE, col.names=FALSE)
   expect_error(importAnnotation(bad_ann_file), "Could not import annotation: too few columns in annotation file.")
   unlink(bad_ann_file)
 })
 
 test_that("importing annotation with too many columns fails", {
-  bad_ann_file <- file.path(expected_parameters$result_dir, "too_few.txt")
+  bad_ann_file <- file.path(expected_parameters$results_directory, "too_few.txt")
   write.table(as.data.frame(matrix(0, ncol = 4, nrow = 5)), bad_ann_file, sep="\t", row.names = FALSE, col.names=FALSE)
   expect_error(importAnnotation(bad_ann_file), "Could not import annotation: too many columns in annotation file.")
   unlink(bad_ann_file)

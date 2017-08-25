@@ -35,9 +35,9 @@ A \link{character} string containing the name of the output file.
 \examples{
 \dontrun{
  # Basic parameter list
- params <- list ( 'counts' = "/path/to/counts.txt",
-                  'target' = "/path/to/targets.txt",
-                  'result_dir' = "/path/to/result_dir")
+ params <- list ( 'counts_directory' = "/path/to/counts.txt",
+                  'targets_file'     = "/path/to/targets.txt",
+                  'results_directory' = "/path/to/result_dir")
 
  # Write tab-delimited config file to working directory
  writeConfig("config.txt", parameters=params)

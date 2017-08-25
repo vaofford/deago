@@ -1,6 +1,6 @@
 context("count data")
 
-count_dir <- expected_parameters$counts
+count_dir <- expected_parameters$counts_directory
 
 for (i in colnames(expected_dds))
 {
