@@ -2,17 +2,13 @@
 % Please edit documentation in R/goAnalysis.R
 \name{prepareGOtable}
 \alias{prepareGOtable}
-\title{GO enrichment analysis}
+\title{Prepare GO results datatable}
 \usage{
-prepareGOtable(dds, contrast, go_level)
+prepareGOtable(go_table)
 }
 \arguments{
-\item{dds}{DESeq object}
-
-\item{contrast}{DESeqResults object}
-
-\item{go_level}{BP or MF}
+\item{go_table}{A data frame containing topGO results}
 }
 \description{
-Run topGO enrichment anlaysis for contrast
+Prepare GO results datatable
 }

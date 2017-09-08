@@ -2,38 +2,36 @@
 #' @description Run topGO enrichment anlaysis for contrast
 #'
 #' @param dds DESeq object
-#' @param contrast DESeqResults object
-#' @param go_level BP or MF
+#' @param contrasts A \link{list}
+#' @param go_level_list A \link{list}
 #'
 #' @import topGO
 #' @importFrom S4Vectors metadata 'metadata<-'
 #'
 #' @export
 
-prepareGOtable <- function(dds, contrast, go_level)
+runGOanalysis <- function(dds, contrasts, go_level_list)
 {
-  go_data <- prepareGoData(dds, contrast, go_level)
+  go_table_list <- list()
+  for (contrast in names(contrasts))
+  {
+    for (go_level in go_level_list)
+    {
+      go_label <- paste0(contrast, "_", go_level)
 
-  go_table <- runGoAnalysis(go_data)
+      go_data <- prepareGOdata(dds, contrasts[[contrast]], go_level)
+      go_table <- topGOanalysis(go_data)
 
-  if ("symbol" %in% names(contrast)) {
-    go_table <- getGoSymbols(contrast, go_data, go_table)
+      go_table$identifiers <- paste(genesInTerm(go_data, go_table$GO.ID), collapse=", ")
+
+      if ("symbol" %in% names(contrasts[[contrast]])) {
+        go_table <- getGOsymbols(contrasts[[contrast]], go_data, go_table)
+      }
+
+      go_table_list[[go_label]] <- go_table
+    }
   }
-
-  go_dt <- datatable(go_table,
-                     filter = 'top',
-                     options = list(
-                       pageLength = 10,
-                       autoWidth = TRUE,
-                       scrollX = TRUE,
-                       scrollCollapse = TRUE,
-                       digits=3,
-                       rownames= FALSE,
-                       columnDefs = list(list(className = 'dt-center', targets = 1:ncol(go_table)-1))
-                     )
-                    )
-
-  return(go_dt)
+  return(go_table_list)
 }
 
 #' @title Prepare GO data
@@ -48,7 +46,7 @@ prepareGOtable <- function(dds, contrast, go_level)
 #' @importFrom S4Vectors metadata 'metadata<-'
 #' @export
 
-prepareGoData <- function(dds, contrast, go_level)
+prepareGOdata <- function(dds, contrast, go_level)
 {
   alpha <- ifelse(!is.null(metadata(contrast)$alpha), 0.05, metadata(contrast)$alpha)
   alpha <- as.numeric(alpha)
@@ -73,8 +71,8 @@ prepareGoData <- function(dds, contrast, go_level)
   return(go_data)
 }
 
-#' @title Prepare GO data
-#' @description Prepare GO terms for TopGO analysis
+#' @title Run topGO analysis
+#' @description Run topGO analysis
 #'
 #' @param go_data topGO object
 #'
@@ -83,7 +81,7 @@ prepareGoData <- function(dds, contrast, go_level)
 #' @importFrom graph numNodes
 #' @export
 
-runGoAnalysis <- function(go_data)
+topGOanalysis <- function(go_data)
 {
   fisher <- runTest(go_data, algorithm = "classic", statistic = "fisher")
   weight01 <- runTest(go_data, algorithm = "weight01", statistic = "fisher")
@@ -106,11 +104,8 @@ runGoAnalysis <- function(go_data)
                        topNodes = numTableNodes
   )
 
-  go_table <- go_table[, c('GO.ID','Term','Significant','Expected','weight01Fisher')]
-
   return(go_table)
 }
-
 
 #' @title Get gene symbols for GO terms
 #' @description Get gene symbols for GO terms
@@ -120,10 +115,9 @@ runGoAnalysis <- function(go_data)
 #' @param GOtable topGO table
 #'
 #' @import topGO
-#' @importFrom S4Vectors metadata 'metadata<-'
 #' @export
 
-getGoSymbols <- function(contrast, GOdata, GOtable)
+getGOsymbols <- function(contrast, GOdata, GOtable)
 {
   goGeneList <- genesInTerm(GOdata, GOtable$GO.ID)
 
@@ -138,4 +132,59 @@ getGoSymbols <- function(contrast, GOdata, GOtable)
   }
 
   return(GOtable)
+}
+
+#' @title Write GO results table to file
+#' @description Write GO results table to file
+#'
+#' @details
+#' The details
+#'
+#' @param go_tables A list containing topGO results tables
+#' @param resultsDir A \link{character} string giving the path to timestamped
+#'   results directory
+#'
+#' @importFrom methods is
+#' @importFrom utils write.table
+#' @export
+
+writeGOtables <- function(go_tables, resultsDir) {
+  for (go_table in names(go_tables))
+  {
+    go_file = paste0(go_table, ".tsv")
+    write.table(go_tables[[go_table]], file=file.path(resultsDir, go_file), quote=FALSE, sep="\t", row.names=FALSE)
+  }
+}
+
+
+#' @title Prepare GO results datatable
+#' @description Prepare GO results datatable
+#'
+#' @param go_table A data frame containing topGO results
+#'
+#' @import DT
+#' @export
+
+prepareGOtable <- function(go_table)
+{
+  condensed_go_table <- go_table[, c('GO.ID','Term','Significant','Expected','weight01Fisher')]
+  if("symbol" %in% colnames(go_table))
+  {
+    condensed_go_table$symbol <- go_table$symbol
+  }
+
+  go_dt <- datatable(condensed_go_table,
+                     filter = 'top',
+                     options = list(
+                       pageLength = 10,
+                       autoWidth = TRUE,
+                       scrollX = TRUE,
+                       scrollCollapse = TRUE,
+                       digits=3,
+                       rownames= FALSE,
+                       columnDefs = list(list(className = 'dt-center', targets = 1:ncol(condensed_go_table)-1))
+                     )
+  )
+
+  return(go_dt)
 }

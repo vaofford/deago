@@ -51,10 +51,11 @@ expected_prepared_contrast <- prepareContrast(expected_dds_de, expected_contrast
 expected_contrast_summary <- contrastSummary(expected_contrasts, list())
 expected_contrast_table <- prepareContrastTable(expected_contrasts[["BI_vs_AI"]])
 
-expected_go_data <- prepareGoData(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], 'BP')
-expected_go_table <- runGoAnalysis(expected_go_data)
-expected_go_dt <- prepareGOtable(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], 'BP')
-expected_go_symbols <- getGoSymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
+expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , c('BP'))
+expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], 'BP')
+expected_go_table <- topGOanalysis(expected_go_data)
+expected_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
+expected_go_dt <- prepareGOtable(expected_go_tables[["BI_vs_AI_BP"]])
 
 expected_ma_plot <- plotContrastMA(expected_contrasts$BI_vs_AI, getwd(), geneLabels=TRUE)
 expected_volcano_plot <- plotVolcano(expected_contrasts$BI_vs_AI, getwd(), geneLabels=TRUE)
@@ -80,6 +81,7 @@ save( expected_parameters,
       expected_prepared_contrast,
       expected_contrast_summary,
       expected_contrast_table,
+      expected_go_tables,
       expected_go_data,
       expected_go_table,
       expected_go_symbols,
