@@ -14,7 +14,7 @@
 
 runGOanalysis <- function(dds, contrasts, parameters)
 {
-  allowed_go_levels <- list('BP'=c('BP'), 'MF'=c('BP'), 'all'=c('BP','MF'))
+  allowed_go_levels <- list('BP'=c('BP'), 'MF'=c('MF'), 'all'=c('BP','MF'))
   go_levels <- ifelse(is.null(parameters$go_level), 'all', parameters$go_level)
 
   if ( go_levels %in% names(allowed_go_levels) )
