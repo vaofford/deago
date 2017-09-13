@@ -1,12 +1,12 @@
 context("go analysis")
 
 test_that("running GO analysis works", {
-  expect_silent(observed_go_tables <- suppressMessages(runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , c('BP'))))
+  expect_silent(observed_go_tables <- suppressMessages(runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , expected_parameters)))
   expect_equal(observed_go_tables, expected_go_tables)
 })
 
 test_that("preparing GO data works", {
-  expect_silent(observed_go_data <- suppressMessages(prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], 'BP')))
+  expect_silent(observed_go_data <- suppressMessages(prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], c('BP'))))
   expect_equal(observed_go_data, expected_go_data)
 })
 

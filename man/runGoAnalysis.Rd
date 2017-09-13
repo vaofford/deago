@@ -4,14 +4,16 @@
 \alias{runGOanalysis}
 \title{GO enrichment analysis}
 \usage{
-runGOanalysis(dds, contrasts, go_level_list)
+runGOanalysis(dds, contrasts, parameters)
 }
 \arguments{
 \item{dds}{DESeq object}
 
 \item{contrasts}{A \link{list}}
 
-\item{go_level_list}{A \link{list}}
+\item{parameters}{A \link{list} containing key/value pairs which define the
+parameters for the analysis (see \link[deago]{importConfig} for more
+information).}
 }
 \description{
 Run topGO enrichment anlaysis for contrast

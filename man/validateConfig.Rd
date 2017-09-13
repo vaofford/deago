@@ -31,7 +31,7 @@ created.} }
 
 Other accepted key/value pairs and their defaults are: \describe{
 \item{\strong{gene_ids}}{Name of column in count files which contains the
-gene identifiers [Default: Geneid]} \item{\strong{alpha}}{[Significance
+gene identifiers [Default: geneID]} \item{\strong{alpha}}{[Significance
 cut-off, see \link[DESeq2]{results} for more information Default: 0.05]}
 \item{\strong{control}}{Name of condition in the targets file which was the
 control [Default: control]} \item{\strong{annotation_file}}{Location of annotation

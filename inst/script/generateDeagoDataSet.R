@@ -11,7 +11,8 @@ expected_parameters_list <- list (  'counts_directory'  = "test_counts",
                                     'annotation_file'   = 'tests/testthat/deago-test-annotation.tsv',
                                     'keep_images'       = 1,
                                     'qc_only'           = 0,
-                                    'go_analysis'       = 1)
+                                    'go_analysis'       = 1,
+                                    'go_level'          = 'BP')
 
 parameters_file <- file.path(tempdir(), 'config')
 buildConfig(parameters_file, parameters=expected_parameters_list)
@@ -51,8 +52,8 @@ expected_prepared_contrast <- prepareContrast(expected_dds_de, expected_contrast
 expected_contrast_summary <- contrastSummary(expected_contrasts, list())
 expected_contrast_table <- prepareContrastTable(expected_contrasts[["BI_vs_AI"]])
 
-expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , c('BP'))
-expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], 'BP')
+expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , expected_parameters)
+expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], expected_parameters)
 expected_go_table <- topGOanalysis(expected_go_data)
 expected_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
 expected_go_dt <- prepareGOtable(expected_go_tables[["BI_vs_AI_BP"]])

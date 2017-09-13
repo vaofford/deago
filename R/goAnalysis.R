@@ -3,19 +3,31 @@
 #'
 #' @param dds DESeq object
 #' @param contrasts A \link{list}
-#' @param go_level_list A \link{list}
+#' @param parameters A \link{list} containing key/value pairs which define the
+#'   parameters for the analysis (see \link[deago]{importConfig} for more
+#'   information).
 #'
 #' @import topGO
 #' @importFrom S4Vectors metadata 'metadata<-'
 #'
 #' @export
 
-runGOanalysis <- function(dds, contrasts, go_level_list)
+runGOanalysis <- function(dds, contrasts, parameters)
 {
+  allowed_go_levels <- list('BP'=c('BP'), 'MF'=c('BP'), 'all'=c('BP','MF'))
+  go_levels <- ifelse(is.null(parameters$go_level), 'all', parameters$go_level)
+
+  if ( go_levels %in% names(allowed_go_levels) )
+  {
+    go_levels <- allowed_go_levels[[go_levels]]
+  } else {
+    stop ("go_level must be BP, MF or all")
+  }
+
   go_table_list <- list()
   for (contrast in names(contrasts))
   {
-    for (go_level in go_level_list)
+    for (go_level in go_levels)
     {
       go_label <- paste0(contrast, "_", go_level)
 
