@@ -53,7 +53,7 @@ expected_contrast_summary <- contrastSummary(expected_contrasts, list())
 expected_contrast_table <- prepareContrastTable(expected_contrasts[["BI_vs_AI"]])
 
 expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , expected_parameters)
-expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], expected_parameters)
+expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], c('BP'))
 expected_go_table <- topGOanalysis(expected_go_data)
 expected_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
 expected_go_dt <- prepareGOtable(expected_go_tables[["BI_vs_AI_BP"]])

@@ -34,10 +34,10 @@ runGOanalysis <- function(dds, contrasts, parameters)
       go_data <- prepareGOdata(dds, contrasts[[contrast]], go_level)
       go_table <- topGOanalysis(go_data)
 
-      go_table$identifiers <- paste(genesInTerm(go_data, go_table$GO.ID), collapse=", ")
+      go_table$identifiers <- getGOidentifiers(go_data, go_table)
 
       if ("symbol" %in% names(contrasts[[contrast]])) {
-        go_table <- getGOsymbols(contrasts[[contrast]], go_data, go_table)
+        go_table$symbol <- getGOsymbols(contrasts[[contrast]], go_data, go_table)
       }
 
       go_table_list[[go_label]] <- go_table
@@ -119,6 +119,30 @@ topGOanalysis <- function(go_data)
   return(go_table)
 }
 
+#' @title Get gene identifiers for GO terms
+#' @description Get gene identifiers for GO terms
+#'
+#' @param GOdata topGO object
+#' @param GOtable topGO table
+#'
+#' @import topGO
+#' @export
+
+getGOidentifiers <- function(GOdata, GOtable)
+{
+  goGeneList <- genesInTerm(GOdata, GOtable$GO.ID)
+
+  identifiersInTerms <- vector()
+  for (i in 1:length(GOtable$GO.ID))
+  {
+    goTerm <- GOtable$GO.ID[i]
+    genesInTerm <- goGeneList[goTerm][[1]]
+    identifiersInTerms[i] <- paste(genesInTerm, collapse=', ')
+  }
+
+  return(identifiersInTerms)
+}
+
 #' @title Get gene symbols for GO terms
 #' @description Get gene symbols for GO terms
 #'
@@ -133,6 +157,7 @@ getGOsymbols <- function(contrast, GOdata, GOtable)
 {
   goGeneList <- genesInTerm(GOdata, GOtable$GO.ID)
 
+  symbolsInTerms <- vector()
   for (i in 1:length(GOtable$GO.ID))
   {
     goTerm <- GOtable$GO.ID[i]
@@ -140,11 +165,12 @@ getGOsymbols <- function(contrast, GOdata, GOtable)
     geneIndex <- rownames(contrast) %in% genesInTerm
     symbolsInTerm <- contrast$symbol[geneIndex]
     symbolsInTerm <- sort( unique(symbolsInTerm), method='radix' )
-    GOtable$symbol[i] <- paste(symbolsInTerm, collapse=', ')
+    symbolsInTerms[i] <- paste(symbolsInTerm, collapse=', ')
   }
 
-  return(GOtable)
+  return(symbolsInTerms)
 }
+
 
 #' @title Write GO results table to file
 #' @description Write GO results table to file
