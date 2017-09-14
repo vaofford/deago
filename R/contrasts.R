@@ -162,9 +162,9 @@ prepareContrastTable <- function(contrast)
     contrast_filt <- as.data.frame(contrast_filt)[,c('baseMean','log2FoldChange','padj')] %>% format(digits=3)
     contrast_filt[,1:2] <- apply(contrast_filt[,1:2], 2, as.numeric)
 
-    if ( "symbol" %in% names( metadata( contrast ) ) )
+    if ( "symbol" %in% names( contrast ) )
     {
-      symbols <-  metadata(contrast)$symbol
+      symbols <-  contrast$symbol
       symbols_filt <- symbols[which(contrast$padj < 0.01 & !is.na(contrast$padj) & (contrast$log2FoldChange <= -2 | contrast$log2FoldChange >= 2) )]
       contrast_filt <- cbind(symbols_filt, contrast_filt )
       colnames(contrast_filt)[1] <- "symbol"

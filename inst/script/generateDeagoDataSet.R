@@ -48,9 +48,9 @@ expected_dispersion_plot <- plotDispersionEstimates(expected_dds_de, getwd())
 
 expected_contrasts <- getContrasts(expected_dds_de, expected_parameters)
 expected_contrasts_ann <- getContrasts(expected_dds_de_ann, expected_parameters)
-expected_prepared_contrast <- prepareContrast(expected_dds_de, expected_contrasts[["BI_vs_AI"]])
-expected_contrast_summary <- contrastSummary(expected_contrasts, list())
-expected_contrast_table <- prepareContrastTable(expected_contrasts[["BI_vs_AI"]])
+expected_prepared_contrast <- prepareContrast(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]])
+expected_contrast_summary <- contrastSummary(expected_contrasts_ann, list())
+expected_contrast_table <- prepareContrastTable(expected_contrasts_ann[["BI_vs_AI"]])
 
 expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , expected_parameters)
 expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], c('BP'))
