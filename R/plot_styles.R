@@ -17,6 +17,14 @@ theme_deago_legend <- function()
 
 theme_deago_density_legend <- function()
 {
+  theme(
+    legend.title=element_text(size=14, face="bold", vjust=2),
+    legend.text=element_text(size=11)
+  )
+}
+
+theme_deago_dispEst_legend <- function()
+{
   theme_deago_legend() +
   theme(
     legend.justification=c(1,0),
@@ -92,7 +100,7 @@ theme_deago_read_counts <- function(ymax)
     theme_deago_legend(),
     xlab(""),
     ylab("Total read count per sample"),
-    scale_fill_discrete(name="Experimental condition"),
+    scale_fill_discrete(name="Experimental\ncondition"),
     theme(axis.text.x = element_text(angle = 90, hjust = 1)),
     scale_y_continuous(labels=comma, limits=c(0, ymax))
   ))
@@ -119,7 +127,7 @@ theme_deago_pca <- function(pc1, pc2, xlim, ylim, repel_label)
     ylab(paste0("PC2: ", pc2, "% variance")),
     xlim(xlim),
     ylim(ylim),
-    scale_color_discrete(name = "Experimental condition"),
+    scale_color_discrete(name = "Experimental\ncondition"),
     geom_label_repel(aes(label=repel_label, size=3), show.legend = FALSE, box.padding = unit(1, "lines"))
   ))
 }
@@ -131,7 +139,7 @@ theme_deago_cooks <- function()
     theme_deago_legend(),
     xlab(""),
     ylab("Cook's distance (log10)"),
-    scale_fill_discrete(name = "Experimental condition"),
+    scale_fill_discrete(name = "Experimental\ncondition"),
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
   ))
 }
@@ -140,7 +148,7 @@ theme_deago_density <- function()
 {
   structure(list(
     theme_deago(),
-    theme_deago_legend(),
+    theme_deago_density_legend(),
     scale_x_log10(name="\nNormalized counts",
                   breaks=c(0.1,1,10,100,1000,10000,100000),
                   limits=c(0.1,100000)),
@@ -154,7 +162,7 @@ theme_deago_dispEst <- function()
 {
   structure(list(
     theme_deago(),
-    theme_deago_density_legend(),
+    theme_deago_dispEst_legend(),
     scale_x_log10(),
     scale_y_log10(),
     xlab("mean of normalized counts"),

@@ -183,6 +183,7 @@ prepareContrastTable <- function(contrast)
                         escape=FALSE,
                         options = list(
                           pageLength = 10,
+                          autoWidth = TRUE,
                           scrollX = TRUE,
                           scrollCollapse = TRUE,
                           digits=3,

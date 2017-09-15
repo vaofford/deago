@@ -4,7 +4,7 @@
 \alias{plotToFile}
 \title{Write Plot To File}
 \usage{
-plotToFile(plot, resultsDir, file, width = 600, height = 400)
+plotToFile(plot, resultsDir, file, width = 800, height = 600)
 }
 \arguments{
 \item{plot}{Plot to be written to file}

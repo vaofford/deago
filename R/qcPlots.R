@@ -174,9 +174,11 @@ plotDensity <- function (dds,resultsDir)
   toplot = stack(toplot, select=colnames(toplot))
   toplot <- toplot[which(is.finite(log10(toplot$values))),]
 
+  density_ncol <- ifelse( length(colnames(dds)) > 40, 2, 1)
+
   density_plot <- ggplot(toplot, aes(toplot$values, colour=toplot$ind, alpha=0.5)) +
                   geom_line(aes(color=toplot$ind), stat="density", alpha=0.5) +
-                  theme_deago_density()
+                  theme_deago_density() + guides(colour=guide_legend(ncol=density_ncol))
 
   image_dir <- file.path(resultsDir, "images")
   if (dir.exists(image_dir)){

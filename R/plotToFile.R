@@ -25,7 +25,7 @@
 #'
 #' @export
 
-plotToFile <- function(plot, resultsDir, file, width=600, height=400)
+plotToFile <- function(plot, resultsDir, file, width=800, height=600)
 {
   if (missing(plot)) stop("Could not write plot: no plot given.")
   if (missing(resultsDir)) stop("Could not write plot: no results directory given.")
