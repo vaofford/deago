@@ -16,7 +16,7 @@ Maintainer: Victoria Offord <vo1@sanger.ac.uk>
 Imports: DESeq2, DT, GenomicRanges, ggplot2, ggrepel, graph, limma, methods, 
     SummarizedExperiment, S4Vectors, reshape, scales, topGO
 Suggests: grDevices, stats, utils, testthat, knitr, proto
-Depends: R (>= 3.3)
+Depends: R (>= 3.2)
 License: GPL-3 | file LICENSE
 BugReports: https://gitlab.internal.sanger.ac.uk/sanger-pathogens/deago/issues
 RoxygenNote: 6.0.1
