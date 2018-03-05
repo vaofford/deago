@@ -2,6 +2,7 @@
 functionList <- list( 'plotReadCounts' = 'plotReadCounts',
                       'plotSampleDistances' = 'plotSampleDistances',
                       'pcaPlot' = 'pcaPlot',
+                      'pcaScreePlot' = 'pcaScreePlot',
                       'plotCooks' = 'plotCooks',
                       'plotDensity' = 'plotDensity',
                       'plotDispersionEstimates' = 'plotDispersionEstimates')

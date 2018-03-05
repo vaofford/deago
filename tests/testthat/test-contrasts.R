@@ -33,7 +33,7 @@ test_that("preparing contrast table works", {
   expect_silent(observed_contrast_table <- prepareContrastTable(expected_contrasts_ann[["BI_vs_AI"]]))
   expect_is(observed_contrast_table, 'datatables')
   expect_is(observed_contrast_table, 'htmlwidget')
-  expect_equal(observed_contrast_table$x, expected_contrast_table$x)
+  expect_equal(observed_contrast_table$x$data, expected_contrast_table$x$data)
 })
 
 test_that("preparing empty contrast table gives message", {
