@@ -78,13 +78,42 @@ plotSampleDistances <- function(dds, resultsDir)
   return(sd_plot)
 }
 
+#' @title Calculate principal components
+#'
+#' @description Calcultate principal component values
+#'
+#' @param dds DESeqDataSet
+#'
+#' @import DESeq2
+#' @importFrom stats prcomp
+#' @importFrom genefilter rowVars
+#'
+#' @export
+
+getPrincipalComponents <- function(dds) {
+  rld <- rlog(dds, blind=FALSE)
+  rv <- rowVars(assay(rld))
+  select <- order(rv, decreasing=TRUE)[seq_len(min(500, length(rv)))]
+  pca <- prcomp(t(assay(rld)[select,]))
+
+  pc_coords <- as.data.frame(pca$x)
+  pc_coords$condition <- dds$condition
+
+  percent_var <- data.frame( pc=colnames(pca$x), proportion= pca$sdev^2 / sum( pca$sdev^2 ) )
+  percent_var$cumulative <- cumsum(percent_var$proportion)
+
+  pc_list <- list(pc_coords=pc_coords, percent_var=percent_var)
+  return(pc_list)
+}
+
 
 #' @title PCA Plot
 #'
 #' @description Generates a PCA plot. If images subdirectory exits, will also
 #'   save the plot to images/pca.png.
 #'
-#' @param dds DESeqDataSet
+#' @param pc_list List containing PC coordinates and PC summary from
+#'   getPrincipalComponents(dds)
 #' @param resultsDir character: path to timestamped results directory
 #'
 #' @import DESeq2
@@ -93,18 +122,17 @@ plotSampleDistances <- function(dds, resultsDir)
 #'
 #' @export
 
-pcaPlot <- function (dds, resultsDir)
+pcaPlot <- function (pc_list, resultsDir)
 {
-  rld <- rlog(dds, blind=FALSE)
-  data <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
-  percent_var <- round(100*attr(data, "percentVar"))
+  data <- pc_list$pc_coords
+  percent_var <- round(100*pc_list$percent_var$proportion)
 
   xmax = 10 * ceiling(max(data$PC1) / 10) + 10
   xmin = 10 * floor(min(data$PC1) / 10) - 10
   ymax = 10 * ceiling(max(data$PC2) / 10) + 10
   ymin = 10 * floor(min(data$PC2) / 10) - 10
 
-  repel_label <- colnames(rld)
+  repel_label <- data$condition
 
   pca_plot <- ggplot(data=data, aes(x=data$PC1, y=data$PC2, color=data$condition)) +
               geom_point(size=6) +
@@ -116,6 +144,72 @@ pcaPlot <- function (dds, resultsDir)
   }
 
   return(pca_plot)
+}
+
+#' @title PCA Scree Plot
+#'
+#' @description Generates a PCA scree plot. If images subdirectory exits, will also
+#'   save the plot to images/pca_scree.png.
+#'
+#' @param pc_list List containing PC coordinates and PC summary from
+#'   getPrincipalComponents(dds)
+#' @param resultsDir character: path to timestamped results directory
+#'
+#' @import DESeq2
+#' @import ggplot2
+#' @importFrom stats reorder
+#'
+#' @export
+
+pcaScreePlot <- function (pc_list, resultsDir)
+{
+  percent_var <- pc_list$percent_var
+
+  pca_scree_plot <- ggplot( percent_var, aes(x=reorder(percent_var$pc, -percent_var$proportion), y=percent_var$proportion) ) +
+    geom_bar(stat="identity") +
+    geom_point(aes(x = reorder(percent_var$pc, -percent_var$proportion), y = percent_var$cumulative), shape=21, colour = "black", fill = "gray") +
+    geom_hline(yintercept =0.9, linetype="dashed") +
+    geom_hline(yintercept =0.7, linetype="dashed", color="gray50") +
+    theme_deago_pca_scree()
+
+  image_dir <- file.path(resultsDir, "images")
+  if (dir.exists(image_dir)){
+    plotToFile(pca_scree_plot, resultsDir, "pca_scree.png")
+  }
+
+  return(pca_scree_plot)
+}
+
+#' @title PCA Summary
+#'
+#' @description Generates a summary table of PCA proportions and cumulative sum
+#'   values
+#'
+#' @param pc_list List containing PC coordinates and PC summary from
+#'   getPrincipalComponents(dds)
+#'
+#' @import DESeq2
+#' @importFrom stats reorder
+#'
+#' @export
+
+pcaSummary <- function (pc_list)
+{
+  percent_var <- pc_list$percent_var
+  percent_var[,2:3] <- round(100*percent_var[,2:3], digits=2)
+  colnames(percent_var) <- c('Principal Component', 'Variation Explained (%)', 'Cumulative Total (%)')
+
+  pca_table <- datatable( percent_var,
+                          rownames = FALSE,
+                          options = list(
+                            pageLength = 5,
+                            autoWidth = TRUE,
+                            scrollCollapse = TRUE,
+                            digits=3,
+                            columnDefs = list(list(className = 'dt-center', targets = 0:ncol(percent_var)-1))
+                         )
+                        )
+  return(pca_table)
 }
 
 
