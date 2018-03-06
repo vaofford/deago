@@ -31,9 +31,15 @@ test_that("summarising contrasts works", {
 
 test_that("preparing contrast table works", {
   expect_silent(observed_contrast_table <- prepareContrastTable(expected_contrasts_ann[["BI_vs_AI"]]))
+
   expect_is(observed_contrast_table, 'datatables')
   expect_is(observed_contrast_table, 'htmlwidget')
-  expect_equal(observed_contrast_table$x$data, expected_contrast_table$x$data)
+
+  # To satisfy R-devel differences in ordering
+  observed_contrast_table$x$data <- observed_contrast_table$x$data[order(row.names(observed_contrast_table$x$data), method='radix'),]
+  expected_contrast_table$x$data <- expected_contrast_table$x$data[order(row.names(expected_contrast_table$x$data), method='radix'),]
+
+  expect_equal(observed_contrast_table$x$data, expected_contrast_table$x$data, check.attributes = FALSE)
 })
 
 test_that("preparing empty contrast table gives message", {

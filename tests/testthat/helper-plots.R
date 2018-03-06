@@ -1,4 +1,3 @@
-
 functionList <- list( 'plotReadCounts' = 'plotReadCounts',
                       'plotSampleDistances' = 'plotSampleDistances',
                       'pcaPlot' = 'pcaPlot',
@@ -22,7 +21,7 @@ testPlot <- function(functionName, expectedDDS, expectedPlot, fileName, resultsD
   observed_file <- file.path(resultsDirectory, 'images', fileName)
   expect_true(file.exists(observed_file))
 
-  expect_equal(layer_data(observed_plot), layer_data(expectedPlot))
-  expect_equal(layer_scales(observed_plot), layer_scales(expectedPlot))
+  expect_equal(ggplot2::layer_data(observed_plot), ggplot2::layer_data(expectedPlot))
+  expect_equal(ggplot2::layer_scales(observed_plot), ggplot2::layer_scales(expectedPlot))
   expect_identical(observed_plot$theme, expectedPlot$theme)
 }
