@@ -3,11 +3,11 @@ context("contrasts")
 test_that("getting contrasts works", {
   expect_silent(observed_contrasts <- getContrasts(expected_dds_de, expected_parameters))
   expect_is(observed_contrasts[['BI_vs_AI']], 'DESeqResults')
-  expect_equal(observed_contrasts, expected_contrasts)
+  expect_equal(observed_contrasts, expected_contrasts, check.attributes = FALSE)
 
   expect_silent(observed_contrasts_ann <- getContrasts(expected_dds_de_ann, expected_parameters))
   expect_is(observed_contrasts_ann[['BI_vs_AI']], 'DESeqResults')
-  expect_equal(observed_contrasts_ann, expected_contrasts_ann)
+  expect_equal(observed_contrasts_ann, expected_contrasts_ann, check.attributes = FALSE)
 })
 
 test_that("preparing contrast works", {
