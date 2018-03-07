@@ -132,6 +132,16 @@ theme_deago_pca <- function(pc1, pc2, xlim, ylim, repel_label)
   ))
 }
 
+theme_deago_pca_scree <- function()
+{
+  structure(list(
+    theme_deago(),
+    xlab(paste0("Proportion of explained variance")),
+    ylab(paste0("Principal components")),
+    ylim(0,1)
+  ))
+}
+
 theme_deago_cooks <- function()
 {
   structure(list(
