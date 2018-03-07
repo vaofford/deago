@@ -29,3 +29,4 @@ test_that("writing GO tables works", {
   expect_silent(writeGOtables(expected_go_tables, expected_parameters$results_directory))
   expect_true(file.exists(file.path(expected_parameters$results_directory, "BI_vs_AI_BP.tsv")))
 })
+
