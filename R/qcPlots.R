@@ -1,3 +1,35 @@
+#' @title Format count matrix from DESeqDataSet
+#'
+#' @description Format counts from DESeqDataSet for read and null counts plots
+#'
+#' @param dds DESeqDataSet
+#'
+#' @import DESeq2
+#'
+#' @export
+#'
+formatReadCounts <- function (dds)
+{
+  raw_counts <- counts(dds)
+  normalized_counts <- counts(dds, normalized=TRUE)
+
+  total_raw_counts <- transform(apply(raw_counts, 2, sum))
+  total_normalized_counts <- transform(apply(normalized_counts, 2, sum))
+
+  null_raw_counts <- transform(apply(raw_counts, 2, function(x) (sum(x==0)/sum(x))*100))
+  null_normalized_counts <- transform(apply(normalized_counts, 2, function(x) (sum(x==0)/sum(x))*100))
+
+  replicate_levels <- colnames(raw_counts)[order(dds$condition, colnames(raw_counts))]
+  counts_df <- data.frame( "condition" = dds$condition,
+                           "replicates" = factor(colnames(raw_counts), levels=replicate_levels),
+                           "total_raw_counts" = total_raw_counts[,1],
+                           "total_normalized_counts" = total_normalized_counts[,1],
+                           "null_raw_counts" = null_raw_counts[,1],
+                           "null_normalized_counts" = null_normalized_counts[,1]
+                         )
+  return(counts_df)
+}
+
 #' @title Plot Read Counts
 #'
 #' @description Generates a barplot showing the total number of reads per
@@ -9,25 +41,28 @@
 #'
 #' @import DESeq2
 #' @import ggplot2
+#' @import ggpubr
 #' @importFrom scales comma
 #'
 #' @export
 
 plotReadCounts <- function (dds, resultsDir)
 {
-  replicates <- dds$condition
-  names(replicates) <- colnames(dds)
+  counts_df <- formatReadCounts(dds)
 
-  total_reads <- transform(apply(counts(dds), 2, sum))
-  total_reads$replicates <- rownames(total_reads)
-  total_reads$condition <- dds$condition
-  colnames(total_reads)[1]<- c("total")
+  ymax_raw <- roundToFactorOfTen(max(counts_df$total_raw_counts))
+  rc_raw_plot <-  ggplot(counts_df, aes_string(x='replicates', y='total_raw_counts', fill='condition')) +
+                  geom_bar(stat="identity") +
+                  theme_deago_counts(ymax_raw) +
+                  ylab("Total raw read count per sample")
 
-  ymax <- roundToFactorOfTen(max(total_reads$total))
+  ymax_normalized <- roundToFactorOfTen(max(counts_df$total_normalized_counts))
+  rc_noralized_plot <-  ggplot(counts_df, aes_string(x='replicates', y='total_normalized_counts', fill='condition')) +
+                        geom_bar(stat="identity") +
+                        theme_deago_counts(ymax_normalized) +
+                        ylab("Total normalized read count per sample")
 
-  rc_plot <-  ggplot(total_reads, aes_string(x='replicates', y='total', fill='condition')) +
-              geom_bar(stat="identity") +
-              theme_deago_read_counts(ymax)
+  rc_plot <- ggarrange( rc_raw_plot, rc_noralized_plot, ncol = 1, nrow = 2)
 
   image_dir <- file.path(resultsDir, "images")
   if (dir.exists(image_dir)){
@@ -37,6 +72,46 @@ plotReadCounts <- function (dds, resultsDir)
   return(rc_plot)
 }
 
+#' @title Plot Null Counts
+#'
+#' @description Generates a barplot showing the number of genes
+#'   which have no reads mapping to them (null counts)
+#'   images/null_counts_per_sample.png.
+#'
+#' @param dds DESeqDataSet
+#' @param resultsDir character: path to timestamped results directory
+#'
+#' @import DESeq2
+#' @import ggplot2
+#' @importFrom scales comma
+#'
+#' @export
+
+plotNullCounts <- function (dds, resultsDir)
+{
+  counts_df <- formatReadCounts(dds)
+
+  ymax_raw <- roundToFactorOfTen(max(counts_df$null_raw_counts))
+  nc_raw_plot <-  ggplot(counts_df, aes_string(x='replicates', y='null_raw_counts', fill='condition')) +
+    geom_bar(stat="identity") +
+    theme_deago_counts(ymax_raw) +
+    ylab("Null raw counts per sample (%)")
+
+  ymax_normalized <- roundToFactorOfTen(max(counts_df$null_normalized_counts))
+  nc_noralized_plot <-  ggplot(counts_df, aes_string(x='replicates', y='null_normalized_counts', fill='condition')) +
+    geom_bar(stat="identity") +
+    theme_deago_counts(ymax_normalized) +
+    ylab("Null normalized counts per sample (%)")
+
+  nc_plot <- ggarrange( nc_raw_plot, nc_noralized_plot, ncol = 1, nrow = 2)
+
+  image_dir <- file.path(resultsDir, "images")
+  if (dir.exists(image_dir)){
+    plotToFile(nc_plot, resultsDir, "null_counts_per_sample.png")
+  }
+
+  return(nc_plot)
+}
 
 #' @title Plot Sample Distances
 #'

@@ -1,4 +1,5 @@
 functionList <- list( 'plotReadCounts' = 'plotReadCounts',
+                      'plotNullCounts' = 'plotNullCounts',
                       'plotSampleDistances' = 'plotSampleDistances',
                       'pcaPlot' = 'pcaPlot',
                       'pcaScreePlot' = 'pcaScreePlot',

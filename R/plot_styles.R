@@ -93,13 +93,12 @@ theme_deago_volcano <- function(xmin, xmax, title, lfc, sig)
   ))
 }
 
-theme_deago_read_counts <- function(ymax)
+theme_deago_counts <- function(ymax)
 {
   structure(list(
     theme_deago(),
     theme_deago_legend(),
     xlab(""),
-    ylab("Total read count per sample"),
     scale_fill_discrete(name="Experimental\ncondition"),
     theme(axis.text.x = element_text(angle = 90, hjust = 1)),
     scale_y_continuous(labels=comma, limits=c(0, ymax))

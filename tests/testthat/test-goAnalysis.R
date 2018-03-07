@@ -12,12 +12,17 @@ test_that("preparing GO data works", {
 
 test_that("running topGO analysis works", {
   expect_silent(observed_go_table <- suppressMessages(topGOanalysis(expected_go_data)))
+
+  # To satisfy R-devel differences in ordering
+  observed_go_table <- observed_go_table[order(observed_go_table$GO.ID, method='radix'),]
+  expected_go_table <- expected_go_table[order(expected_go_table$GO.ID, method='radix'),]
+
   expect_equal(observed_go_table, expected_go_table, check.attributes = FALSE)
 })
 
 test_that("preparing GO table works", {
   expect_silent(observed_go_dt <- suppressMessages(prepareGOtable(expected_go_tables[["BI_vs_AI_BP"]])))
-  expect_equal(observed_go_dt$x, expected_go_dt$x, check.attributes = FALSE)
+  expect_equal(observed_go_dt$x$data, expected_go_dt$x$data, check.attributes = FALSE)
 })
 
 test_that("getting GO symbols works", {

@@ -4,6 +4,10 @@ test_that("plotting read counts works", {
   testPlot('plotReadCounts', expected_dds_de, expected_rc_plot, 'reads_per_sample.png', expected_parameters$results_directory)
 })
 
+test_that("plotting null counts works", {
+  testPlot('plotNullCounts', expected_dds_de, expected_nc_plot, 'null_counts_per_sample.png', expected_parameters$results_directory)
+})
+
 test_that("plotting sample distances works", {
   testPlot('plotSampleDistances', expected_dds_de, expected_sd_plot, 'sample_distances.png', expected_parameters$results_directory)
 })

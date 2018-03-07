@@ -40,6 +40,7 @@ expected_gene_list <- getGeneSymbols(expected_dds_de, expected_annotation, 2)
 expected_go_list <- getGOlist(expected_annotation, 3)
 
 expected_rc_plot <- plotReadCounts(expected_dds_de, getwd())
+expected_nc_plot <- plotNullCounts(expected_dds_de, getwd())
 expected_sd_plot <- plotSampleDistances(expected_dds_de, getwd())
 expected_pc_list <- getPrincipalComponents(expected_dds_de)
 expected_pca_plot <- pcaPlot(expected_pc_list , getwd())
@@ -91,6 +92,7 @@ save( expected_parameters,
       expected_go_symbols,
       expected_go_dt,
       expected_rc_plot,
+      expected_nc_plot,
       expected_sd_plot,
       expected_pc_list,
       expected_pca_plot,
