@@ -4,10 +4,11 @@
 \alias{pcaPlot}
 \title{PCA Plot}
 \usage{
-pcaPlot(dds, resultsDir)
+pcaPlot(pc_list, resultsDir)
 }
 \arguments{
-\item{dds}{DESeqDataSet}
+\item{pc_list}{List containing PC coordinates and PC summary from
+getPrincipalComponents(dds)}
 
 \item{resultsDir}{character: path to timestamped results directory}
 }

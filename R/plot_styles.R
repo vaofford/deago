@@ -93,13 +93,12 @@ theme_deago_volcano <- function(xmin, xmax, title, lfc, sig)
   ))
 }
 
-theme_deago_read_counts <- function(ymax)
+theme_deago_counts <- function(ymax)
 {
   structure(list(
     theme_deago(),
     theme_deago_legend(),
     xlab(""),
-    ylab("Total read count per sample"),
     scale_fill_discrete(name="Experimental\ncondition"),
     theme(axis.text.x = element_text(angle = 90, hjust = 1)),
     scale_y_continuous(labels=comma, limits=c(0, ymax))
@@ -129,6 +128,16 @@ theme_deago_pca <- function(pc1, pc2, xlim, ylim, repel_label)
     ylim(ylim),
     scale_color_discrete(name = "Experimental\ncondition"),
     geom_label_repel(aes(label=repel_label, size=3), show.legend = FALSE, box.padding = unit(1, "lines"))
+  ))
+}
+
+theme_deago_pca_scree <- function()
+{
+  structure(list(
+    theme_deago(),
+    xlab(paste0("Proportion of explained variance")),
+    ylab(paste0("Principal components")),
+    ylim(0,1)
   ))
 }
 
