@@ -137,7 +137,8 @@ theme_deago_pca_scree <- function()
     theme_deago(),
     xlab(paste0("Proportion of explained variance")),
     ylab(paste0("Principal components")),
-    ylim(0,1)
+    ylim(0,1),
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
   ))
 }
 
