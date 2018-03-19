@@ -4,7 +4,7 @@
 \alias{prepareGOdata}
 \title{Prepare GO data}
 \usage{
-prepareGOdata(dds, contrast, go_level)
+prepareGOdata(dds, contrast, go_level, gene_level = "all")
 }
 \arguments{
 \item{dds}{DESeq object}
@@ -12,6 +12,8 @@ prepareGOdata(dds, contrast, go_level)
 \item{contrast}{DESeqResults object}
 
 \item{go_level}{BP or MF}
+
+\item{gene_level}{all, up or down [all]}
 }
 \description{
 Prepare GO terms for TopGO analysis
