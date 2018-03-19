@@ -1,5 +1,5 @@
 Package: deago
-Version: 1.1.0
+Version: 1.1.1
 Title: DEAGO: RNASeq differential expression analysis and GO term enrichment 
     reporter
 Description:  Generation of user-friendly HTML reports from differential 

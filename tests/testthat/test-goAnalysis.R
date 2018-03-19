@@ -29,6 +29,10 @@ test_that("preparing GO table works", {
   expect_equal(observed_go_dt$x$data, expected_go_dt$x$data, check.attributes = FALSE)
 })
 
+test_that("preparing GO table gives message with no sig.genes", {
+  expect_output(suppressMessages(prepareGOtable(expected_go_tables[["AII_vs_AI_BP"]])), "A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast.")
+})
+
 test_that("getting GO symbols works", {
   expect_silent(observed_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table))
   expect_equal(observed_go_symbols, expected_go_symbols)
@@ -38,4 +42,6 @@ test_that("writing GO tables works", {
   expect_silent(writeGOtables(expected_go_tables, expected_parameters$results_directory))
   expect_true(file.exists(file.path(expected_parameters$results_directory, "BI_vs_AI_BP.tsv")))
 })
+
+
 

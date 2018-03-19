@@ -32,15 +32,20 @@ runGOanalysis <- function(dds, contrasts, parameters)
       go_label <- paste0(contrast, "_", go_level)
 
       go_data <- prepareGOdata(dds, contrasts[[contrast]], go_level)
-      go_table <- topGOanalysis(go_data)
-
-      go_table$identifiers <- getGOidentifiers(go_data, go_table)
-
-      if ("symbol" %in% names(contrasts[[contrast]])) {
-        go_table$symbol <- getGOsymbols(contrasts[[contrast]], go_data, go_table)
+      
+      if ( class(go_data) == 'topGOdata' ) {
+        go_table <- topGOanalysis(go_data)
+  
+        go_table$identifiers <- getGOidentifiers(go_data, go_table)
+  
+        if ("symbol" %in% names(contrasts[[contrast]])) {
+          go_table$symbol <- getGOsymbols(contrasts[[contrast]], go_data, go_table)
+        }
+  
+        go_table_list[[go_label]] <- go_table
+      } else {
+        go_table_list[[go_label]] <- go_data
       }
-
-      go_table_list[[go_label]] <- go_table
     }
   }
   return(go_table_list)
@@ -71,14 +76,18 @@ prepareGOdata <- function(dds, contrast, go_level)
   names(relevant_genes) <- all_genes
 
   groupGOTerms() # Load the GOTerm environments (as of 3.5)
-
-  go_data <-new("topGOdata",
-               ontology = go_level,
-               allGenes = relevant_genes,
-               nodeSize = 10,
-               annot = annFUN.gene2GO,
-               gene2GO = metadata(dds)$go
-  )
+  
+  if ( length(sig_genes) > 0 ) {
+    go_data <-new("topGOdata",
+                 ontology = go_level,
+                 allGenes = relevant_genes,
+                 nodeSize = 10,
+                 annot = annFUN.gene2GO,
+                 gene2GO = metadata(dds)$go
+    )
+  } else {
+    return( print( "A GO term enrichment analysis could not be performed as there were no significantly differentially expressed genes." ) )
+  }
 
   return(go_data)
 }
@@ -205,6 +214,8 @@ writeGOtables <- function(go_tables, resultsDir) {
 
 prepareGOtable <- function(go_table)
 {
+  if ( !is.data.frame(go_table) ) return( print( "A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast." ) )
+  
   condensed_go_table <- go_table[, c('GO.ID','Term','Significant','Expected','weight01Fisher')]
   if("symbol" %in% colnames(go_table))
   {
