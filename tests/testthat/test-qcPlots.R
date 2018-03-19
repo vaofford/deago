@@ -14,7 +14,7 @@ test_that("plotting sample distances works", {
 
 test_that("preparing PC list works", {
   expect_silent(observed_pc_list <- getPrincipalComponents(expected_dds_de))
-  expect_equal(observed_pc_list, expected_pc_list, check.attributes = FALSE)
+  expect_equal(observed_pc_list, expected_pc_list, check.attributes = FALSE )
 })
 
 test_that("plotting PCA works", {
