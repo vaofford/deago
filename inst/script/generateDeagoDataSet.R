@@ -60,7 +60,11 @@ expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expecte
 expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], c('BP'))
 expected_go_table <- topGOanalysis(expected_go_data)
 expected_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
+expected_go_symbols_up <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'up')
+expected_go_symbols_down <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'down')
 expected_go_dt <- prepareGOtable(expected_go_tables[["BI_vs_AI_BP"]])
+expected_go_dt_up <- prepareGOtable(expected_go_tables[["BI_vs_AI_BP_up"]])
+expected_go_dt_down <- prepareGOtable(expected_go_tables[["BI_vs_AI_BP_down"]])
 
 expected_ma_plot <- plotContrastMA(expected_contrasts$BI_vs_AI, getwd(), geneLabels=TRUE)
 expected_volcano_plot <- plotVolcano(expected_contrasts$BI_vs_AI, getwd(), geneLabels=TRUE)
@@ -90,7 +94,11 @@ save( expected_parameters,
       expected_go_data,
       expected_go_table,
       expected_go_symbols,
+      expected_go_symbols_up,
+      expected_go_symbols_down,
       expected_go_dt,
+      expected_go_dt_up,
+      expected_go_dt_down,
       expected_rc_plot,
       expected_nc_plot,
       expected_sd_plot,
@@ -108,8 +116,3 @@ save( expected_parameters,
       expected_top_genes,
       sessInfo,
       file="tests/testthat/deago-testdata.RData")
-
-
-
-
-

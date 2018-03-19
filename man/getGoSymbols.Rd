@@ -4,7 +4,7 @@
 \alias{getGOsymbols}
 \title{Get gene symbols for GO terms}
 \usage{
-getGOsymbols(contrast, GOdata, GOtable)
+getGOsymbols(contrast, GOdata, GOtable, gene_level = "all")
 }
 \arguments{
 \item{contrast}{DESeqResults object}
@@ -12,6 +12,8 @@ getGOsymbols(contrast, GOdata, GOtable)
 \item{GOdata}{topGO object}
 
 \item{GOtable}{topGO table}
+
+\item{gene_level}{all, up or down [all]}
 }
 \description{
 Get gene symbols for GO terms

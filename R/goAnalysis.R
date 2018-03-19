@@ -24,27 +24,36 @@ runGOanalysis <- function(dds, contrasts, parameters)
     stop ("go_level must be BP, MF or all")
   }
 
+  gene_levels <- c("all", "up", "down")
+
   go_table_list <- list()
   for (contrast in names(contrasts))
   {
     for (go_level in go_levels)
     {
-      go_label <- paste0(contrast, "_", go_level)
-
-      go_data <- prepareGOdata(dds, contrasts[[contrast]], go_level)
-      
-      if ( class(go_data) == 'topGOdata' ) {
-        go_table <- topGOanalysis(go_data)
-  
-        go_table$identifiers <- getGOidentifiers(go_data, go_table)
-  
-        if ("symbol" %in% names(contrasts[[contrast]])) {
-          go_table$symbol <- getGOsymbols(contrasts[[contrast]], go_data, go_table)
+      for (gene_level in gene_levels) {
+        
+        if ( gene_level != "all" ) {
+          go_label <- paste(contrast, go_level, gene_level, sep="_" )
+        } else {
+          go_label <- paste0(contrast, "_", go_level)
         }
-  
-        go_table_list[[go_label]] <- go_table
-      } else {
-        go_table_list[[go_label]] <- go_data
+        
+        go_data <- prepareGOdata(dds, contrasts[[contrast]], go_level, gene_level)
+        
+        if ( class(go_data) == 'topGOdata' ) {
+          go_table <- topGOanalysis(go_data)
+    
+          go_table$identifiers <- getGOidentifiers(go_data, go_table)
+    
+          if ("symbol" %in% names(contrasts[[contrast]])) {
+            go_table$symbol <- getGOsymbols(contrasts[[contrast]], go_data, go_table, gene_level)
+          }
+    
+          go_table_list[[go_label]] <- go_table
+        } else {
+          go_table_list[[go_label]] <- go_data
+        }
       }
     }
   }
@@ -57,13 +66,14 @@ runGOanalysis <- function(dds, contrasts, parameters)
 #' @param dds DESeq object
 #' @param contrast DESeqResults object
 #' @param go_level BP or MF
+#' @param gene_level all, up or down [all]
 #'
 #' @import topGO
 #' @importFrom methods new
 #' @importFrom S4Vectors metadata 'metadata<-'
 #' @export
 
-prepareGOdata <- function(dds, contrast, go_level)
+prepareGOdata <- function(dds, contrast, go_level, gene_level='all')
 {
   alpha <- ifelse(!is.null(metadata(contrast)$alpha), 0.05, metadata(contrast)$alpha)
   alpha <- as.numeric(alpha)
@@ -71,7 +81,17 @@ prepareGOdata <- function(dds, contrast, go_level)
 
   all_genes <- rownames(contrast)
   contrast_filt <- as.data.frame(contrast[which(contrast$padj < alpha & !is.na(contrast$padj)),])
-  sig_genes <- rownames(contrast_filt)
+  
+  if ( gene_level == "up") {
+    contrast_filt_up <- contrast_filt[ which( contrast_filt$log2FoldChange > 0 ) , ]
+    sig_genes <- rownames(contrast_filt_up)
+  } else if (gene_level == "down") {
+    contrast_filt_down <- contrast_filt[ which( contrast_filt$log2FoldChange < 0 ) , ]
+    sig_genes <- rownames(contrast_filt_down)
+  } else { # Assume all 
+    sig_genes <- rownames(contrast_filt)
+  }
+
   relevant_genes <- factor(as.integer(all_genes %in% sig_genes))
   names(relevant_genes) <- all_genes
 
@@ -86,7 +106,7 @@ prepareGOdata <- function(dds, contrast, go_level)
                  gene2GO = metadata(dds)$go
     )
   } else {
-    return( print( "A GO term enrichment analysis could not be performed as there were no significantly differentially expressed genes." ) )
+    return( "A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast." )
   }
 
   return(go_data)
@@ -158,19 +178,21 @@ getGOidentifiers <- function(GOdata, GOtable)
 #' @param contrast DESeqResults object
 #' @param GOdata topGO object
 #' @param GOtable topGO table
+#' @param gene_level all, up or down [all]
 #'
 #' @import topGO
 #' @export
 
-getGOsymbols <- function(contrast, GOdata, GOtable)
+getGOsymbols <- function(contrast, GOdata, GOtable, gene_level='all')
 {
   goGeneList <- genesInTerm(GOdata, GOtable$GO.ID)
+  filteredGoGeneList <- filterGeneSymbols(contrast, goGeneList, gene_level)
 
   symbolsInTerms <- vector()
   for (i in 1:length(GOtable$GO.ID))
   {
     goTerm <- GOtable$GO.ID[i]
-    genesInTerm <- goGeneList[goTerm][[1]]
+    genesInTerm <- filteredGoGeneList[goTerm][[1]]
     geneIndex <- rownames(contrast) %in% genesInTerm
     symbolsInTerm <- contrast$symbol[geneIndex]
     symbolsInTerm <- sort( unique(symbolsInTerm), method='radix' )
@@ -178,6 +200,34 @@ getGOsymbols <- function(contrast, GOdata, GOtable)
   }
 
   return(symbolsInTerms)
+}
+
+#' @title Filter DE gene symbols in GO term
+#' @description Filter DE gene symbols for GO terms
+#' 
+#' @param contrast DESeqResults object
+#' @param goGeneList vector of symbols associated with GO term
+#' @param gene_level all, up or down [all]
+#'
+#' @import topGO
+#' @export
+
+filterGeneSymbols <- function ( contrast, goGeneList, gene_level='all' )
+{ 
+  if ( gene_level == 'up' ) {
+    genes <- rownames(contrast)[ which( contrast$padj < 0.05 & contrast$log2FoldChange > 0 ) ]
+  } else if ( gene_level == 'down' ) {
+    genes<- rownames(contrast)[ which( contrast$padj < 0.05 & contrast$log2FoldChange < 0 ) ]
+  } else {
+    genes <- rownames(contrast)[ which(contrast$padj < 0.05) ]
+  }
+  
+  go.genes <- list()
+  for ( go.id in names(goGeneList) ) {
+    go.genes[[go.id]] <- intersect( genes, unlist(goGeneList[go.id]) )
+  }
+  
+  return(go.genes)
 }
 
 
@@ -214,26 +264,28 @@ writeGOtables <- function(go_tables, resultsDir) {
 
 prepareGOtable <- function(go_table)
 {
-  if ( !is.data.frame(go_table) ) return( print( "A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast." ) )
+  if ( !is.data.frame(go_table) ) {
+    message("A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast.")
+  } else {
+    condensed_go_table <- go_table[, c('GO.ID','Term','Significant','Expected','weight01Fisher')]
+    if("symbol" %in% colnames(go_table))
+    {
+      condensed_go_table$symbol <- go_table$symbol
+    }
   
-  condensed_go_table <- go_table[, c('GO.ID','Term','Significant','Expected','weight01Fisher')]
-  if("symbol" %in% colnames(go_table))
-  {
-    condensed_go_table$symbol <- go_table$symbol
+    go_dt <- datatable(condensed_go_table,
+                       filter = 'top',
+                       options = list(
+                         pageLength = 10,
+                         autoWidth = TRUE,
+                         scrollX = TRUE,
+                         scrollCollapse = TRUE,
+                         digits=3,
+                         rownames= FALSE,
+                         columnDefs = list(list(className = 'dt-center', targets = 1:ncol(condensed_go_table)-1))
+                       )
+    )
+  
+    return(go_dt)
   }
-
-  go_dt <- datatable(condensed_go_table,
-                     filter = 'top',
-                     options = list(
-                       pageLength = 10,
-                       autoWidth = TRUE,
-                       scrollX = TRUE,
-                       scrollCollapse = TRUE,
-                       digits=3,
-                       rownames= FALSE,
-                       columnDefs = list(list(className = 'dt-center', targets = 1:ncol(condensed_go_table)-1))
-                     )
-  )
-
-  return(go_dt)
 }

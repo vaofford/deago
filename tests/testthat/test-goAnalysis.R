@@ -27,15 +27,27 @@ test_that("running topGO analysis works", {
 test_that("preparing GO table works", {
   expect_silent(observed_go_dt <- suppressMessages(prepareGOtable(expected_go_tables[["BI_vs_AI_BP"]])))
   expect_equal(observed_go_dt$x$data, expected_go_dt$x$data, check.attributes = FALSE)
+  
+  expect_silent(observed_go_dt_up <- suppressMessages(prepareGOtable(expected_go_tables[["BI_vs_AI_BP_up"]])))
+  expect_equal(observed_go_dt_up$x$data, expected_go_dt_up$x$data, check.attributes = FALSE)
+  
+  expect_silent(observed_go_dt_down <- suppressMessages(prepareGOtable(expected_go_tables[["BI_vs_AI_BP_down"]])))
+  expect_equal(observed_go_dt_down$x$data, expected_go_dt_down$x$data, check.attributes = FALSE)
 })
 
 test_that("preparing GO table gives message with no sig.genes", {
-  expect_output(suppressMessages(prepareGOtable(expected_go_tables[["AII_vs_AI_BP"]])), "A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast.")
+  expect_message(prepareGOtable(expected_go_tables[["AII_vs_AI_BP"]]), "A GO enrichment analysis could not be performed as there are no significantly differentially expressed genes for this contrast.")
 })
 
 test_that("getting GO symbols works", {
   expect_silent(observed_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table))
   expect_equal(observed_go_symbols, expected_go_symbols)
+  
+  expect_silent(observed_go_symbols_up <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'up'))
+  expect_equal(observed_go_symbols_up, expected_go_symbols_up)
+  
+  expect_silent(observed_go_symbols_down <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'down'))
+  expect_equal(observed_go_symbols_down, expected_go_symbols_down)
 })
 
 test_that("writing GO tables works", {
