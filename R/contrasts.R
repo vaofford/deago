@@ -97,7 +97,7 @@ prepareContrast <- function(dds, contrast)
   # Add gene symbol if available
   if ( "symbol" %in% names( mcols( dds ) ) )
   {
-    contrast <- cbind( mcols(dds)$symbol, contrast )
+    contrast <- cbind( mcols(dds)$symbol, contrast[,-which(colnames(contrast) == 'symbol')] )
     colnames(contrast)[1] <- "symbol"
   }
 

@@ -4,12 +4,16 @@
 \alias{getGOidentifiers}
 \title{Get gene identifiers for GO terms}
 \usage{
-getGOidentifiers(GOdata, GOtable)
+getGOidentifiers(contrast, GOdata, GOtable, gene_level = "all")
 }
 \arguments{
+\item{contrast}{DESeqResults object}
+
 \item{GOdata}{topGO object}
 
 \item{GOtable}{topGO table}
+
+\item{gene_level}{all, up or down [all]}
 }
 \description{
 Get gene identifiers for GO terms

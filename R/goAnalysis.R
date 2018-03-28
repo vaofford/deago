@@ -44,7 +44,7 @@ runGOanalysis <- function(dds, contrasts, parameters)
         if ( class(go_data) == 'topGOdata' ) {
           go_table <- topGOanalysis(go_data)
     
-          go_table$identifiers <- getGOidentifiers(go_data, go_table)
+          go_table$identifiers <- getGOidentifiers(contrasts[[contrast]], go_data, go_table, gene_level)
     
           if ("symbol" %in% names(contrasts[[contrast]])) {
             go_table$symbol <- getGOsymbols(contrasts[[contrast]], go_data, go_table, gene_level)
@@ -150,22 +150,25 @@ topGOanalysis <- function(go_data)
 
 #' @title Get gene identifiers for GO terms
 #' @description Get gene identifiers for GO terms
-#'
+#' 
+#' @param contrast DESeqResults object
 #' @param GOdata topGO object
 #' @param GOtable topGO table
+#' @param gene_level all, up or down [all]
 #'
 #' @import topGO
 #' @export
 
-getGOidentifiers <- function(GOdata, GOtable)
+getGOidentifiers <- function(contrast, GOdata, GOtable, gene_level='all')
 {
   goGeneList <- genesInTerm(GOdata, GOtable$GO.ID)
+  filteredGoGeneList <- filterGeneIdentifiers(contrast, goGeneList, gene_level)
 
   identifiersInTerms <- vector()
   for (i in 1:length(GOtable$GO.ID))
   {
     goTerm <- GOtable$GO.ID[i]
-    genesInTerm <- goGeneList[goTerm][[1]]
+    genesInTerm <- filteredGoGeneList[goTerm][[1]]
     identifiersInTerms[i] <- paste(genesInTerm, collapse=', ')
   }
 
@@ -186,7 +189,7 @@ getGOidentifiers <- function(GOdata, GOtable)
 getGOsymbols <- function(contrast, GOdata, GOtable, gene_level='all')
 {
   goGeneList <- genesInTerm(GOdata, GOtable$GO.ID)
-  filteredGoGeneList <- filterGeneSymbols(contrast, goGeneList, gene_level)
+  filteredGoGeneList <- filterGeneIdentifiers(contrast, goGeneList, gene_level)
 
   symbolsInTerms <- vector()
   for (i in 1:length(GOtable$GO.ID))
@@ -202,17 +205,17 @@ getGOsymbols <- function(contrast, GOdata, GOtable, gene_level='all')
   return(symbolsInTerms)
 }
 
-#' @title Filter DE gene symbols in GO term
-#' @description Filter DE gene symbols for GO terms
+#' @title Filter DE gene identifiers in GO term
+#' @description Filter DE gene identifiers for GO terms
 #' 
 #' @param contrast DESeqResults object
-#' @param goGeneList vector of symbols associated with GO term
+#' @param goGeneList vector of gene identifiers associated with GO term
 #' @param gene_level all, up or down [all]
 #'
 #' @import topGO
 #' @export
 
-filterGeneSymbols <- function ( contrast, goGeneList, gene_level='all' )
+filterGeneIdentifiers <- function ( contrast, goGeneList, gene_level='all' )
 { 
   if ( gene_level == 'up' ) {
     genes <- rownames(contrast)[ which( contrast$padj < 0.05 & contrast$log2FoldChange > 0 ) ]
@@ -272,9 +275,14 @@ prepareGOtable <- function(go_table)
     {
       condensed_go_table$symbol <- go_table$symbol
     }
+    
+    condensed_go_table$GO.ID <- paste0("<a href='http://amigo.geneontology.org/amigo/term/",
+                                       condensed_go_table$GO.ID, "'target='_blank'>",
+                                       condensed_go_table$GO.ID,"</a>")
   
     go_dt <- datatable(condensed_go_table,
                        filter = 'top',
+                       escape=FALSE,
                        options = list(
                          pageLength = 10,
                          autoWidth = TRUE,
