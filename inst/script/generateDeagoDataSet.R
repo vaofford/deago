@@ -59,6 +59,9 @@ expected_contrast_table <- prepareContrastTable(expected_contrasts_ann[["BI_vs_A
 expected_go_tables <- runGOanalysis(expected_dds_de_ann, list("BI_vs_AI"=expected_contrasts_ann[["BI_vs_AI"]]) , expected_parameters)
 expected_go_data <- prepareGOdata(expected_dds_de_ann, expected_contrasts_ann[["BI_vs_AI"]], c('BP'))
 expected_go_table <- topGOanalysis(expected_go_data)
+expected_go_identifiers <- getGOidentifiers(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
+expected_go_identifiers_up <- getGOidentifiers(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'up')
+expected_go_identifiers_down <- getGOidentifiers(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'down')
 expected_go_symbols <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table)
 expected_go_symbols_up <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'up')
 expected_go_symbols_down <- getGOsymbols(expected_contrasts_ann[["BI_vs_AI"]], expected_go_data, expected_go_table, 'down')
@@ -93,6 +96,9 @@ save( expected_parameters,
       expected_go_tables,
       expected_go_data,
       expected_go_table,
+      expected_go_identifiers,
+      expected_go_identifiers_up,
+      expected_go_identifiers_down,
       expected_go_symbols,
       expected_go_symbols_up,
       expected_go_symbols_down,
