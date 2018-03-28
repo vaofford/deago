@@ -272,9 +272,14 @@ prepareGOtable <- function(go_table)
     {
       condensed_go_table$symbol <- go_table$symbol
     }
+    
+    condensed_go_table$GO.ID <- paste0("<a href='http://amigo.geneontology.org/amigo/term/",
+                                       condensed_go_table$GO.ID, "'target='_blank'>",
+                                       condensed_go_table$GO.ID,"</a>")
   
     go_dt <- datatable(condensed_go_table,
                        filter = 'top',
+                       escape=FALSE,
                        options = list(
                          pageLength = 10,
                          autoWidth = TRUE,
