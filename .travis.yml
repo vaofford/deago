@@ -11,3 +11,8 @@ r_check_args: "--no-vignettes --as-cran --no-manual"
 
 pandoc_version: 1.19.2.1
 
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
