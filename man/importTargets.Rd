@@ -62,3 +62,5 @@ Other import functions: \code{\link{annotateDataset}},
   \code{\link{validateConfig}},
   \code{\link{validateTargets}}
 }
+\concept{import functions}
+\concept{target functions}

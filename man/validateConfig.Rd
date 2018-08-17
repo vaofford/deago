@@ -67,3 +67,5 @@ Other import functions: \code{\link{annotateDataset}},
   \code{\link{readCountData}},
   \code{\link{validateTargets}}
 }
+\concept{configuration functions}
+\concept{import functions}

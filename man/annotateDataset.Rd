@@ -60,3 +60,5 @@ Other import functions: \code{\link{importAnnotation}},
   \code{\link{validateConfig}},
   \code{\link{validateTargets}}
 }
+\concept{annotation functions}
+\concept{import functions}

@@ -41,7 +41,7 @@ test_that("adding annotation with genes only works", {
   metadata(expected_dds_de_ann_geneOnly) <- metadata(expected_dds_de_ann_geneOnly)[1]
 
   expect_silent(observed_dds_de_ann <- addAnnotationsToDataSet(expected_dds_de, expected_annotation[,1:2]))
-  expect_equal(observed_dds_de_ann, expected_dds_de_ann_geneOnly)
+  expect_equal(observed_dds_de_ann, expected_dds_de_ann_geneOnly, check.attributes = FALSE)
 })
 
 test_that("adding annotation with genes only works", {
@@ -49,7 +49,7 @@ test_that("adding annotation with genes only works", {
   mcols(expected_dds_de_ann_goOnly) <- mcols(expected_dds_de_ann_goOnly)[1:40]
 
   expect_silent(observed_dds_de_ann <- addAnnotationsToDataSet(expected_dds_de, expected_annotation[,c(1,3)]))
-  expect_equal(observed_dds_de_ann, expected_dds_de_ann_goOnly)
+  expect_equal(observed_dds_de_ann, expected_dds_de_ann_goOnly, check.attributes = FALSE)
 })
 
 test_that("parsing go terms works", {

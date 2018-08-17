@@ -54,3 +54,4 @@ Other annotation functions: \code{\link{addAnnotationsToDataSet}},
   \code{\link{annotateDataset}}, \code{\link{getGOlist}},
   \code{\link{importAnnotation}}
 }
+\concept{annotation functions}

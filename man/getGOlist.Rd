@@ -61,3 +61,4 @@ Other annotation functions: \code{\link{addAnnotationsToDataSet}},
   \code{\link{getGeneSymbols}},
   \code{\link{importAnnotation}}
 }
+\concept{annotation functions}

@@ -58,3 +58,4 @@ Other annotation functions: \code{\link{annotateDataset}},
   \code{\link{getGOlist}}, \code{\link{getGeneSymbols}},
   \code{\link{importAnnotation}}
 }
+\concept{annotation functions}
