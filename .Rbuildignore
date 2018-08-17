@@ -3,3 +3,4 @@
 ^\.travis\.yml$
 ^AUTHORS
 ^Dockerfile
+^_config.yml
