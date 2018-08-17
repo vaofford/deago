@@ -50,3 +50,4 @@ A \link{character} string containing the name of the output configuration file.
 Other configuration functions: \code{\link{importConfig}},
   \code{\link{validateConfig}}, \code{\link{writeConfig}}
 }
+\concept{configuration functions}

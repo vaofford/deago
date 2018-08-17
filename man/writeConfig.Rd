@@ -50,3 +50,4 @@ A \link{character} string containing the name of the output file.
 Other configuration functions: \code{\link{buildConfig}},
   \code{\link{importConfig}}, \code{\link{validateConfig}}
 }
+\concept{configuration functions}

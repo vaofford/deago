@@ -4,7 +4,8 @@
 \alias{readCountData}
 \title{Read Count Data}
 \usage{
-readCountData(targets, path, id_column, data_column, skip = 0, sep = "\\t")
+readCountData(targets, path, id_column, data_column, skip = 0,
+  sep = "\\t")
 }
 \arguments{
 \item{targets}{A \link{data.frame} containing the target information mapping
@@ -86,3 +87,5 @@ Other import functions: \code{\link{annotateDataset}},
   \code{\link{validateConfig}},
   \code{\link{validateTargets}}
 }
+\concept{count data functions}
+\concept{import functions}

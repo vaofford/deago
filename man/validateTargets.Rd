@@ -44,3 +44,5 @@ Other import functions: \code{\link{annotateDataset}},
   \code{\link{importConfig}}, \code{\link{importTargets}},
   \code{\link{readCountData}}, \code{\link{validateConfig}}
 }
+\concept{import functions}
+\concept{target functions}
