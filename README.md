@@ -10,6 +10,7 @@ R package for generating HTML reports from differential expression analyis and G
   * [Installation](#installation)
     * [Required dependencies](#required-dependencies)
     * [R](#r)
+    * [Running the tests](#running-the-tests)
   * [License](#license)
   * [Feedback/Issues](#feedbackissues)
   * [Citation](#citation)
@@ -34,6 +35,13 @@ Install the latest version of this package by entering the following in R:
 install.packages("devtools")
 library(devtools)
 install_github("sanger-pathogens/deago")
+```
+
+### Running the tests
+The test can be run with dzil from the top level directory, replacing <version> with the downloaded version:  
+```
+R CMD build --no-build-vignettes .
+R CMD check deago_<version>.tar.gz --no-vignettes --as-cran --no-manual
 ```
 ## License
 deago is free software, licensed under [GPLv3](https://github.com/sanger-pathogens/deago/blob/master/LICENSE).
