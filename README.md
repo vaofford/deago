@@ -38,7 +38,7 @@ install_github("sanger-pathogens/deago")
 ```
 
 ### Running the tests
-The test can be run with dzil from the top level directory, replacing <version> with the downloaded version:  
+The test can be run from the top level directory, replacing <version> with the downloaded version:  
 ```
 R CMD build --no-build-vignettes .
 R CMD check deago_<version>.tar.gz --no-vignettes --as-cran --no-manual
