@@ -14,6 +14,18 @@ test_that("plotting MA works", {
   expect_silent(observed_ma_plot <- plotContrastMA(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
 })
 
+test_that("plotting MA with bad parameters fails", {
+  expect_error(plotContrastMA(list()), "Could not plotContrastMA: data is not a matrix, dataframe or DESeqResults object.")
+  expect_error(plotContrastMA(matrix()), "Could not plotContrastMA: no results directory given.")
+  
+  bad_contrast <- expected_contrasts_ann$BI_vs_AI
+  metadata(bad_contrast)$alpha <- 2
+  expect_error(plotContrastMA(bad_contrast, expected_parameters$results_directory), "Could not plotContrastMA: alpha must be numeric, >0 and <1.")
+  
+  expect_error(plotContrastMA(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, lfc='x'), "Could not plotContrastMA: lfc is not numeric.")
+  expect_error(plotContrastMA(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, geneSymbols=c('x')), "Could not plotContrastMA: length of geneSymbols is not the same as num rows in contrast.")
+})
+
 test_that("plotting volcano works", {
   expect_silent(observed_volcano_plot <- plotVolcano(expected_contrasts$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
   expect_is(observed_volcano_plot, 'ggplot')
@@ -28,6 +40,18 @@ test_that("plotting volcano works", {
   expect_silent(observed_volcano_plot <- plotVolcano(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, geneLabels=TRUE))
 })
 
+test_that("plotting volcano with bad parameters fails", {
+  expect_error(plotVolcano(list()), "Could not plotVolcano: data is not a matrix, dataframe or DESeqResults object.")
+  expect_error(plotVolcano(matrix()), "Could not plotVolcano: no results directory given.")
+  
+  bad_contrast <- expected_contrasts_ann$BI_vs_AI
+  metadata(bad_contrast)$alpha <- 2
+  expect_error(plotVolcano(bad_contrast, expected_parameters$results_directory), "Could not plotVolcano: alpha must be numeric, >0 and <1.")
+  
+  expect_error(plotVolcano(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, lfc='x'), "Could not plotVolcano: lfc is not numeric.")
+  expect_error(plotVolcano(expected_contrasts_ann$BI_vs_AI, expected_parameters$results_directory, geneSymbols=c('x')), "Could not plotVolcano: length of geneSymbols is not the same as num rows in contrast.")
+})
+
 test_that("getting venn counts and plotting venn works", {
   expect_silent(observed_venn_counts <- getVennCounts(expected_contrasts[c(3,12)]))
   expect_identical(observed_venn_counts, expected_venn_counts)
@@ -38,6 +62,16 @@ test_that("getting venn counts and plotting venn works", {
 
   expect_silent(observed_venn_counts_ann <- getVennCounts(expected_contrasts_ann[c(3,12)]))
   expect_silent(plotVenn(observed_venn_counts_ann, expected_parameters$results_directory))
+})
+
+test_that("getting venn counts with >5 or <2 contrasts fails", {
+  bad_contrast_list<- list(1,2,3,4,5,6)
+  names(bad_contrast_list) <- c(1:6)
+  expect_output(getVennCounts(bad_contrast_list), "A venn diagram could not be produced as there are more than 5 contrasts.")
+  
+  bad_contrast_list<- list(1)
+  names(bad_contrast_list) <- 1
+  expect_output(getVennCounts(bad_contrast_list), "A venn diagram could not be produced as there are not enough contrasts.")
 })
 
 test_that("getting and labelling top genes works", {
