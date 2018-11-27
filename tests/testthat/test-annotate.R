@@ -31,6 +31,11 @@ test_that("importing annotation with too many columns fails", {
   unlink(bad_ann_file)
 })
 
+test_that("adding annotation with columns switched works", {
+  expect_silent(switched_annotation <- importAnnotation(switched_annotation_file))
+  expect_silent(addAnnotationsToDataSet(expected_dds_de, switched_annotation))
+})
+
 test_that("adding annotation with GO terms in multiple columns fails", {
   bad_annotation <- cbind(expected_annotation[,c(1,3)], expected_annotation[,3])
   expect_error(addAnnotationsToDataSet(expected_dds_de, bad_annotation), "Could not import annotation: GO terms were found in multiple columns.")
