@@ -94,4 +94,6 @@ test_that("parsing gene names works", {
   expected_symbols[is.na(expected_symbols) ] <- "unknown"
   expected_symbols[which(expected_symbols == "") ] <- "unknown"
   expect_silent(checkSymbolListLength(expected_symbols, expected_dds_de))
+  expected_symbols <- expected_symbols[-1]
+  expect_error(checkSymbolListLength(expected_symbols, expected_dds_de), "Could not import annotation: gene symbol list length different from feature list.")
 })
