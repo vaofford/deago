@@ -37,14 +37,31 @@ makeResultDir <- function(path=NULL, keep_images=0)
   resultsDir <- file.path(path, resultsDir)
   dir.create(resultsDir)
 
-  if (!dir.exists(resultsDir)) stop(paste0("Could not create results directory: result directory not created"))
+  checkDirExists(resultsDir)
 
   if (keep_images == 1)
   {
     imageDir <- file.path(resultsDir,"images")
     dir.create(imageDir)
-    if (!dir.exists(imageDir)) stop(paste0("Could not create results directory: image directory not created"))
+    checkDirExists(imageDir)
   }
 
   return(resultsDir)
+}
+
+#' @title Check directory exists 
+#'
+#' @description \code{\link{checkDirExists}} checks expected directory exists.
+#'
+#' @param dir An \link{character} directory name to be checked
+#'
+#' @export
+#'
+#' @examples
+#' checkDirExists('dirname')
+#' 
+
+checkDirExists <- function(path)
+{
+  if (!dir.exists(path)) stop(paste0(path," does not exist."))
 }

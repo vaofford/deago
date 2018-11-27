@@ -89,4 +89,9 @@ test_that("parsing gene names works", {
   expect_identical(observed_gene_list, expected_gene_list)
 
   expect_error(getGeneSymbols(expected_dds_de, expected_annotation[,2:3], 2), "Could not import annotation: no dataset identifiers found.")
+  
+  expected_symbols <- expected_annotation[match(rownames(expected_dds_de), expected_annotation[, 1]), 2 ]
+  expected_symbols[is.na(expected_symbols) ] <- "unknown"
+  expected_symbols[which(expected_symbols == "") ] <- "unknown"
+  expect_silent(checkSymbolListLength(expected_symbols, expected_dds_de))
 })

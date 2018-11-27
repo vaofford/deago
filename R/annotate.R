@@ -326,7 +326,26 @@ getGeneSymbols <- function(dds, ann, col)
   symbols[is.na(symbols) ] <- "unknown"
   symbols[which(symbols == "") ] <- "unknown"
 
-  if (length(symbols) != length(rownames(dds))) stop("Could not import annotation: gene symbol list length different from feature list.")
+  checkSymbolListLength(symbols, dds)
 
   return(symbols)
 }
+
+#' @title Compare symbol list length
+#'
+#' @description \code{\link{checkSymbolListLength}} checks lenght of symbols list is the same as the lenght of the \link[DESeq2]{DESeqDataSet}.
+#'
+#' @param symbol_list A \link{list} of symbols
+#' @param dds A \link[DESeq2]{DESeqDataSet} object.
+#'
+#' @export
+#'
+#' @examples
+#' checkSymbolListLength(symbols, dds)
+#' 
+
+checkSymbolListLength <- function(symbols, dds)
+{
+  if (length(symbols) != length(rownames(dds))) stop("Could not import annotation: gene symbol list length different from feature list.")
+}
+

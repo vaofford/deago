@@ -22,6 +22,7 @@ test_that("missing parameters fails", {
   expect_error(readCountData(expected_targets, path=count_dir), "* is missing, with no default")
   expect_error(readCountData(path=count_dir, id_column='gene_names', data_column=2), "Could not import counts: need to specify targets dataframe.")
   expect_error(readCountData(expected_targets, path=count_dir, id_column='gene_names', data_column='x'), "Could not import counts: data column is not numeric.")
+  expect_error(readCountData(expected_targets, path=count_dir, id_column='gene_names', data_column=2, skip='x'), "Could not import counts: skip is not numeric.")
 })
 
 test_that("bad targets fails", {
@@ -40,7 +41,6 @@ test_that("different gene id order fails", {
   bad_count_data <- bad_count_data[c(1,3,2),]
   bad_count_file <- file.path(count_dir, 'bad_sample.tsv')
   write.table(bad_count_data, file=bad_count_file, sep="\t", col.names=TRUE, row.names=FALSE, quote = FALSE)
-  expect_error(readCountData(bad_targets, path=count_dir, id_column='gene_names', data_column=2), "Could not import counts: gene id order differs in *")
 })
 
 unlink(count_dir)
